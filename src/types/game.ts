@@ -1,4 +1,4 @@
-// src/types/game.ts — GeoPuzzle Hunt data model
+// src/types/game.ts — Prahra data model
 
 export interface Game {
   /** Unique identifier (UUID or slug) */

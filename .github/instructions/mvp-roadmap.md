@@ -53,45 +53,39 @@ Demo routes jsou čistě pod `/demo/` — to je ideální, game routes půjdou n
 
 ### Fáze 0: Příprava (Foundation)
 
-- [ ] **0.1** Vytvořit `src/types/game.ts` — TypeScript typy z datového modelu (viz `game-data-model.md`)
-- [ ] **0.2** Vytvořit `src/data/games/demo-prague-oldtown.ts` — demo hra s 3-4 body v Praze
-- [ ] **0.3** Nainstalovat `leaflet` + `@types/leaflet` (nebo `react-leaflet`) pro mapy
-- [ ] **0.4** Upravit `public/manifest.json` pro PWA (name, icons, theme_color, display: standalone)
+- [x] **0.1** Vytvořit `src/types/game.ts` — TypeScript typy (`Game`, `Level`, `Hint`, `GpsLocation`, `Media`, `GameState`)
+- [x] **0.2** Vytvořit `src/data/games/demo-prague-oldtown.ts` — demo hra se 4 body v Praze (Orloj → Týnský chrám → Černá Matka Boží → Prašná brána)
+- [x] **0.3** Nainstalovat `leaflet` + `react-leaflet` + `@types/leaflet`
+- [x] **0.4** Upravit `public/manifest.json` pro PWA (GeoPuzzle Hunt, portrait, dark theme)
 
-### Fáze 1: Core Game Engine (Jádro hry)
+### Fáze 1: Core Game Engine (Jádro hry) ✅
 
-- [ ] **1.1** `useGeolocation` hook — wrapper nad Geolocation API, watchPosition, error handling
-- [ ] **1.2** `useWakeLock` hook — Screen Wake Lock API, aby telefon nezhasl
-- [ ] **1.3** `useGameState` hook — stav hry (aktuální level, skóre, čas, použité hinty)
-  - Persistovat do `localStorage` aby se hra neztratila po refreshi
-- [ ] **1.4** `haversineDistance(a, b)` utilita — výpočet vzdálenosti mezi dvěma GPS body
-- [ ] **1.5** `validateAnswer(input, level)` utilita — kontrola odpovědi (exact/regex/none)
+- [x] **1.1** `useGeolocation` hook — `watchPosition`, error handling (CZ chybové hlášky), fake GPS teleport pro debug
+- [x] **1.2** `useWakeLock` hook — Screen Wake Lock API + re-acquire on visibility change
+- [x] **1.3** `useGameState` hook — stav hry s localStorage persistencí, podpora "Pokračovat" / "Začít znovu"
+- [x] **1.4** `haversineDistance(a, b)` + `formatDistance()` + `calculateBearing()` v `src/lib/geo.ts`
+- [x] **1.5** `validateAnswer(input, level)` — exact, regex, multi-choice, qr-code, none v `src/lib/validate-answer.ts`
 
-### Fáze 2: Game UI (Hráčské rozhraní)
+### Fáze 2: Game UI (Hráčské rozhraní) ✅
 
-- [ ] **2.1** Route `/game/$gameSlug` — hlavní herní obrazovka
-  - Načte game data podle slug
-  - Zobrazí aktuální level
-- [ ] **2.2** Komponenta `GameMap` — Leaflet mapa s pozicí hráče (modrá tečka) a cílem (pokud není skrytý)
-- [ ] **2.3** Komponenta `DistanceIndicator` — "Za 340m" s vizuálním feedbackem (barva se mění blíž k cíli)
-- [ ] **2.4** Komponenta `PuzzleCard` — zobrazení hádanky po příchodu do radius
-  - Input pro odpověď
-  - Tlačítko "Zkontrolovat"
-  - Hinty s potvrzením ("Opravdu chceš nápovědu? +2 minuty k času")
-- [ ] **2.5** Komponenta `GameProgress` — progress bar (level 2/5), uplynulý čas, skóre
-- [ ] **2.6** Obrazovka `GameComplete` — gratulace, shrnutí (čas, body, použité hinty)
+- [x] **2.1** Route `/game/$gameSlug` — hlavní herní obrazovka (GameEngine komponenta)
+- [x] **2.2** Komponenta `GameMap` — Leaflet mapa, modrá tečka hráče, zelený radius, lazy-loaded
+- [x] **2.3** Komponenta `DistanceIndicator` — barevné kódování (red > orange > yellow > green)
+- [x] **2.4** Komponenta `PuzzleCard` — text input, multi-choice, potvrzení hintů s penalizací
+- [x] **2.5** Komponenta `GameProgress` — progress bar, živý čas, body, penalizace
+- [x] **2.6** Obrazovka `GameComplete` — stats grid, breakdown levelů, restart + zpět
 
-### Fáze 3: Game Start & Navigation
+### Fáze 3: Game Start & Navigation ✅
 
-- [ ] **3.1** Route `/` — přepsat landing page: seznam dostupných her (card grid)
-- [ ] **3.2** Route `/game/$gameSlug/intro` — intro obrazovka hry (popis, potřebné pomůcky, odhad času, tlačítko "Začít")
-- [ ] **3.3** Header zjednodušit — logo GeoPuzzle, hamburger menu jen s "Zpět na seznam" a "Debug mode"
+- [x] **3.1** Route `/` — přepsán na seznam her (card grid s metadata: místa, čas, obtížnost, tým)
+- [x] **3.2** Route `/game/$gameSlug/intro` — intro obrazovka (popis, pomůcky, "Začít hru" + "Pokračovat")
+- [x] **3.3** Header skrytý na `/game/*` routes, title změněn na "GeoPuzzle Hunt"
 
-### Fáze 4: Debug & Testing
+### Fáze 4: Debug & Testing ✅
 
-- [ ] **4.1** Debug panel (toggle) — zobrazit na obrazovce: aktuální GPS, přesnost, vzdálenost k cíli, raw coords
-- [ ] **4.2** Fake GPS teleport — dropdown s přednastavenými souřadnicemi (= souřadnice levelů), "Teleport" tlačítko
-- [ ] **4.3** Tlačítko "Jsem na místě" (GPS fallback) — odemkne puzzle manuálně, malá penalizace
+- [x] **4.1** Debug panel (toggle přes 🐛 ikonku) — GPS stav, přesnost, vzdálenost, raw coords
+- [x] **4.2** Fake GPS teleport — tlačítka pro každý level, "Vypnout fake GPS"
+- [x] **4.3** Tlačítko "GPS nefunguje?" — odemkne puzzle manuálně bez příchodu do radiusu
 - [ ] **4.4** Otestovat na reálném mobilu přes HTTPS (ngrok / Cloudflare tunnel)
 
 ### Fáze 5: Polish & PWA (po MVP)
@@ -101,22 +95,32 @@ Demo routes jsou čistě pod `/demo/` — to je ideální, game routes půjdou n
 - [ ] **5.3** Kompas mode — `DeviceOrientationEvent` pro šipku směrem k cíli (alternativa k mapě)
 - [ ] **5.4** QR code scanner — pro `answerType: 'qr-code'` levely (HTML5 camera API)
 - [ ] **5.5** Anti-cheat — základní kontrola rychlosti pohybu
+- [ ] **5.6** Vlastní GeoPuzzle Header — logo, navigace, dark/light mode
 
 ---
 
-## Doporučené pořadí implementace
+## Stav implementace (aktualizováno 24.2.2026)
 
 ```
-Fáze 0 (příprava)     → 1-2 hodiny
-Fáze 1 (hooks/utils)  → 2-3 hodiny
-Fáze 2 (UI)           → 3-4 hodiny
-Fáze 3 (navigace)     → 1-2 hodiny
-Fáze 4 (debug)        → 1-2 hodiny
+Fáze 0 (příprava)     ✅ HOTOVO
+Fáze 1 (hooks/utils)  ✅ HOTOVO
+Fáze 2 (UI)           ✅ HOTOVO
+Fáze 3 (navigace)     ✅ HOTOVO
+Fáze 4 (debug)        🟡 SKORO HOTOVO (zbývá test na mobilu)
 ────────────────────────────────────
-Celkem MVP:            ~ 8-13 hodin
+MVP:                  ✅ FUNKČNÍ (build OK)
 ────────────────────────────────────
-Fáze 5 (polish/PWA)   → 4-6 hodin (po MVP)
+Fáze 5 (polish/PWA)   ⬜ DALŠÍ KROK
 ```
+
+### Další kroky (po pořadí důležitosti)
+
+1. **Otestovat na mobilu** — `npm run dev`, ngrok/CF tunnel, otevřít na telefonu
+2. **Service Worker + offline** — nejkritičtější post-MVP feature
+3. **Kompas mode** — alternativa k mapě, lepší UX venku
+4. **Vlastní Header** — nahradit demo Header za GeoPuzzle navigaci
+5. **Vytvořit druhou hru** — ověřit že data model funguje pro různé typy her
+6. **QR code scanner** — pro `answerType: 'qr-code'`
 
 ## Co NEŘEŠIT v MVP
 

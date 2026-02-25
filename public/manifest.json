@@ -1,7 +1,7 @@
 {
-  "short_name": "GeoPuzzle",
-  "name": "GeoPuzzle Hunt",
-  "description": "Location-based puzzle hunt game — navigate to real-world checkpoints and solve riddles.",
+  "short_name": "Prahra",
+  "name": "Prahra",
+  "description": "Venkovní puzzle hry v Praze — naviguj se na místo a luštíš hádanky. www.prahra.cz",
   "icons": [
     {
       "src": "favicon.ico",

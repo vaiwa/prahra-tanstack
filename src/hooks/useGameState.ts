@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import type { Game, GameState } from '@/types/game'
 
-const STORAGE_PREFIX = 'geopuzzle_'
+const STORAGE_PREFIX = 'prahra_'
 
 function getStorageKey(gameSlug: string): string {
   return `${STORAGE_PREFIX}${gameSlug}_state`

@@ -13,12 +13,11 @@ function HomePage() {
       <section className="relative py-16 px-6 text-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-green-500/10 via-emerald-500/10 to-cyan-500/10" />
         <div className="relative max-w-md mx-auto">
-          <p className="text-5xl mb-4">🧩</p>
           <h1 className="text-4xl font-black text-white mb-2">
-            GeoPuzzle Hunt
+            Prahra
           </h1>
           <p className="text-lg text-gray-400">
-            Venkovní puzzle hry. Žádná instalace — stačí mobil a chuť
+            Venkovní puzzle hry v Praze. Žádná instalace — stačí mobil a chuť
             objevovat.
           </p>
         </div>
