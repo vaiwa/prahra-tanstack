@@ -1,23 +1,24 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
-import { useState, useEffect, useMemo, lazy, Suspense } from 'react'
-import { getGameBySlug } from '@/data/games'
-import { useGeolocation } from '@/hooks/useGeolocation'
-import { useWakeLock } from '@/hooks/useWakeLock'
-import { useGameState } from '@/hooks/useGameState'
-import { haversineDistance } from '@/lib/geo'
-import { DistanceIndicator } from '@/components/game/DistanceIndicator'
-import { PuzzleCard } from '@/components/game/PuzzleCard'
-import { GameProgress } from '@/components/game/GameProgress'
-import { GameComplete } from '@/components/game/GameComplete'
-import { DebugPanel } from '@/components/game/DebugPanel'
-import { ArrowLeft, Bug } from 'lucide-react'
+import { createFileRoute, Link } from "@tanstack/react-router"
+import { ArrowLeft, Bug } from "lucide-react"
+import { lazy, Suspense, useEffect, useMemo, useState } from "react"
+import { ErrorBoundary } from "@/components/ErrorBoundary"
+import { DebugPanel } from "@/components/game/DebugPanel"
+import { DistanceIndicator } from "@/components/game/DistanceIndicator"
+import { GameComplete } from "@/components/game/GameComplete"
+import { GameProgress } from "@/components/game/GameProgress"
+import { PuzzleCard } from "@/components/game/PuzzleCard"
+import { getGameBySlug } from "@/data/games"
+import { useGameState } from "@/hooks/useGameState"
+import { useGeolocation } from "@/hooks/useGeolocation"
+import { useWakeLock } from "@/hooks/useWakeLock"
+import { haversineDistance } from "@/lib/geo"
 
 // Lazy load the map (Leaflet is heavy)
 const GameMap = lazy(() =>
-  import('@/components/game/GameMap').then((m) => ({ default: m.GameMap })),
+  import("@/components/game/GameMap").then((m) => ({ default: m.GameMap })),
 )
 
-export const Route = createFileRoute('/game/$gameSlug/')({
+export const Route = createFileRoute("/game/$gameSlug/")({
   component: GamePlay,
 })
 
@@ -42,10 +43,15 @@ function GamePlay() {
     )
   }
 
-  return <GameEngine gameSlug={gameSlug} />
+  return (
+    <ErrorBoundary>
+      <GameEngine gameSlug={gameSlug} />
+    </ErrorBoundary>
+  )
 }
 
 function GameEngine({ gameSlug }: { gameSlug: string }) {
+  // biome-ignore lint/style/noNonNullAssertion: game existence is validated in GamePlay before rendering GameEngine
   const game = getGameBySlug(gameSlug)!
   const [debugMode, setDebugMode] = useState(false)
   const [solvedMessage, setSolvedMessage] = useState<string | null>(null)
@@ -60,6 +66,7 @@ function GameEngine({ gameSlug }: { gameSlug: string }) {
     gameState
 
   // Start tracking GPS and wake lock on mount
+  // biome-ignore lint/correctness/useExhaustiveDependencies: intentional mount-only effect
   useEffect(() => {
     geo.startTracking()
     wakeLock.request()
@@ -144,8 +151,8 @@ function GameEngine({ gameSlug }: { gameSlug: string }) {
           onClick={() => setDebugMode((d) => !d)}
           className={`p-2 rounded-lg transition-colors ${
             debugMode
-              ? 'bg-orange-500/20 text-orange-400'
-              : 'text-muted-foreground hover:text-foreground'
+              ? "bg-orange-500/20 text-orange-400"
+              : "text-muted-foreground hover:text-foreground"
           }`}
           title="Debug mode"
         >
@@ -170,23 +177,33 @@ function GameEngine({ gameSlug }: { gameSlug: string }) {
 
         {/* Map */}
         {currentLevel && (
-          <Suspense
+          <ErrorBoundary
             fallback={
-              <div className="w-full h-64 rounded-lg bg-muted animate-pulse flex items-center justify-center">
+              <div className="w-full h-64 rounded-lg bg-muted flex items-center justify-center">
                 <p className="text-sm text-muted-foreground">
-                  Načítám mapu...
+                  Mapa není dostupná
                 </p>
               </div>
             }
           >
-            <GameMap
-              playerPosition={geo.position}
-              targetPosition={currentLevel.location}
-              unlockRadius={currentLevel.unlockRadius}
-              accuracy={geo.accuracy}
-              showTarget={true}
-            />
-          </Suspense>
+            <Suspense
+              fallback={
+                <div className="w-full h-64 rounded-lg bg-muted animate-pulse flex items-center justify-center">
+                  <p className="text-sm text-muted-foreground">
+                    Načítám mapu...
+                  </p>
+                </div>
+              }
+            >
+              <GameMap
+                playerPosition={geo.position}
+                targetPosition={currentLevel.location}
+                unlockRadius={currentLevel.unlockRadius}
+                accuracy={geo.accuracy}
+                showTarget={true}
+              />
+            </Suspense>
+          </ErrorBoundary>
         )}
 
         {/* Distance indicator */}
@@ -201,9 +218,7 @@ function GameEngine({ gameSlug }: { gameSlug: string }) {
         {currentLevel && (isInRange || !geo.position || forceShowPuzzle) && (
           <PuzzleCard
             level={currentLevel}
-            revealedHintIndices={
-              state.revealedHints[currentLevel.id] ?? []
-            }
+            revealedHintIndices={state.revealedHints[currentLevel.id] ?? []}
             onRevealHint={(idx) => revealHint(currentLevel.id, idx)}
             onCorrectAnswer={handleCorrectAnswer}
           />

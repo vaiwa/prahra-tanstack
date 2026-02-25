@@ -1,14 +1,14 @@
-import { useState, useCallback, useEffect } from 'react'
-import type { Game, GameState } from '@/types/game'
+import { useCallback, useEffect, useState } from "react"
+import type { Game, GameState } from "@/types/game"
 
-const STORAGE_PREFIX = 'prahra_'
+const STORAGE_PREFIX = "prahra_"
 
 function getStorageKey(gameSlug: string): string {
   return `${STORAGE_PREFIX}${gameSlug}_state`
 }
 
 function loadState(gameSlug: string): GameState | null {
-  if (typeof window === 'undefined') return null
+  if (typeof window === "undefined") return null
   try {
     const raw = localStorage.getItem(getStorageKey(gameSlug))
     if (!raw) return null
@@ -19,7 +19,7 @@ function loadState(gameSlug: string): GameState | null {
 }
 
 function saveState(state: GameState): void {
-  if (typeof window === 'undefined') return
+  if (typeof window === "undefined") return
   try {
     localStorage.setItem(getStorageKey(state.gameSlug), JSON.stringify(state))
   } catch {
@@ -91,9 +91,7 @@ export function useGameState(game: Game) {
 
         return {
           ...prev,
-          currentLevelIndex: isLastLevel
-            ? prev.currentLevelIndex
-            : nextIndex,
+          currentLevelIndex: isLastLevel ? prev.currentLevelIndex : nextIndex,
           score: prev.score + (level?.points ?? 0),
           completedLevels: {
             ...prev.completedLevels,

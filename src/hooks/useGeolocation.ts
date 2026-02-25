@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
-import type { GpsLocation } from '@/types/game'
+import { useCallback, useEffect, useRef, useState } from "react"
+import type { GpsLocation } from "@/types/game"
 
 export interface GeolocationState {
   /** Current position or null if not yet acquired */
@@ -49,7 +49,7 @@ export function useGeolocation(options: UseGeolocationOptions = {}) {
     if (!navigator.geolocation) {
       setState((prev) => ({
         ...prev,
-        error: 'Geolocation API není v tomto prohlížeči dostupná.',
+        error: "Geolocation API není v tomto prohlížeči dostupná.",
       }))
       return
     }
@@ -74,16 +74,16 @@ export function useGeolocation(options: UseGeolocationOptions = {}) {
         switch (err.code) {
           case err.PERMISSION_DENIED:
             errorMessage =
-              'Přístup k poloze byl zamítnut. Povol GPS v nastavení prohlížeče.'
+              "Přístup k poloze byl zamítnut. Povol GPS v nastavení prohlížeče."
             break
           case err.POSITION_UNAVAILABLE:
-            errorMessage = 'Poloha není dostupná. Zkus to venku.'
+            errorMessage = "Poloha není dostupná. Zkus to venku."
             break
           case err.TIMEOUT:
-            errorMessage = 'Získání polohy trvá příliš dlouho.'
+            errorMessage = "Získání polohy trvá příliš dlouho."
             break
           default:
-            errorMessage = 'Neznámá chyba při získávání polohy.'
+            errorMessage = "Neznámá chyba při získávání polohy."
         }
         setState((prev) => ({ ...prev, error: errorMessage }))
       },

@@ -1,6 +1,6 @@
-import { useState } from 'react'
-import type { Level } from '@/types/game'
-import { validateAnswer } from '@/lib/validate-answer'
+import { useState } from "react"
+import { validateAnswer } from "@/lib/validate-answer"
+import type { Level } from "@/types/game"
 
 interface PuzzleCardProps {
   level: Level
@@ -18,8 +18,8 @@ export function PuzzleCard({
   onCorrectAnswer,
   onManualUnlock,
 }: PuzzleCardProps) {
-  const [answer, setAnswer] = useState('')
-  const [feedback, setFeedback] = useState<'correct' | 'wrong' | null>(null)
+  const [answer, setAnswer] = useState("")
+  const [feedback, setFeedback] = useState<"correct" | "wrong" | null>(null)
   const [showHintConfirm, setShowHintConfirm] = useState<number | null>(null)
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -29,10 +29,10 @@ export function PuzzleCard({
     const isCorrect = validateAnswer(answer, level.answer, level.answerType)
 
     if (isCorrect) {
-      setFeedback('correct')
+      setFeedback("correct")
       setTimeout(() => onCorrectAnswer(), 800)
     } else {
-      setFeedback('wrong')
+      setFeedback("wrong")
       setTimeout(() => setFeedback(null), 2000)
     }
   }
@@ -76,12 +76,14 @@ export function PuzzleCard({
       )}
 
       {/* Answer input (for non-'none' types) */}
-      {level.answerType !== 'none' ? (
+      {level.answerType !== "none" ? (
         <form onSubmit={handleSubmit} className="space-y-3">
-          {level.answerType === 'multi-choice' && Array.isArray(level.answer) ? (
+          {level.answerType === "multi-choice" &&
+          Array.isArray(level.answer) ? (
             <div className="space-y-2">
               {level.answer.map((option, i) => (
                 <button
+                  // biome-ignore lint/suspicious/noArrayIndexKey: static options list
                   key={i}
                   type="button"
                   onClick={() => {
@@ -92,21 +94,21 @@ export function PuzzleCard({
                       level.answerType,
                     )
                     if (isCorrect) {
-                      setFeedback('correct')
+                      setFeedback("correct")
                       setTimeout(() => onCorrectAnswer(), 800)
                     } else {
-                      setFeedback('wrong')
+                      setFeedback("wrong")
                       setTimeout(() => setFeedback(null), 2000)
                     }
                   }}
                   className={`w-full text-left p-3 rounded-md border transition-colors ${
                     answer === option
-                      ? feedback === 'correct'
-                        ? 'border-green-500 bg-green-500/10'
-                        : feedback === 'wrong'
-                          ? 'border-red-500 bg-red-500/10'
-                          : 'border-primary'
-                      : 'border-border hover:border-muted-foreground'
+                      ? feedback === "correct"
+                        ? "border-green-500 bg-green-500/10"
+                        : feedback === "wrong"
+                          ? "border-red-500 bg-red-500/10"
+                          : "border-primary"
+                      : "border-border hover:border-muted-foreground"
                   }`}
                 >
                   {option}
@@ -122,23 +124,23 @@ export function PuzzleCard({
                 placeholder="Napiš odpověď..."
                 autoComplete="off"
                 className={`w-full rounded-md border px-3 py-2 text-sm bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors ${
-                  feedback === 'correct'
-                    ? 'border-green-500 ring-green-500'
-                    : feedback === 'wrong'
-                      ? 'border-red-500 ring-red-500'
-                      : 'border-input'
+                  feedback === "correct"
+                    ? "border-green-500 ring-green-500"
+                    : feedback === "wrong"
+                      ? "border-red-500 ring-red-500"
+                      : "border-input"
                 }`}
               />
               <button
                 type="submit"
                 className="w-full rounded-md bg-primary text-primary-foreground py-2 px-4 text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
-                disabled={!answer.trim() || feedback === 'correct'}
+                disabled={!answer.trim() || feedback === "correct"}
               >
-                {feedback === 'correct'
-                  ? '✅ Správně!'
-                  : feedback === 'wrong'
-                    ? '❌ Špatně, zkus to znovu'
-                    : 'Zkontrolovat'}
+                {feedback === "correct"
+                  ? "✅ Správně!"
+                  : feedback === "wrong"
+                    ? "❌ Špatně, zkus to znovu"
+                    : "Zkontrolovat"}
               </button>
             </>
           )}
@@ -155,43 +157,42 @@ export function PuzzleCard({
 
       {/* Hint button */}
       <div className="flex gap-2">
-        {hasMoreHints && (
-          <>
-            {showHintConfirm === nextHintIndex ? (
-              <div className="flex-1 rounded-md bg-yellow-500/10 border border-yellow-500/30 p-3 space-y-2">
-                <p className="text-sm text-yellow-400">
-                  Zobrazit nápovědu? Penalizace:{' '}
-                  <strong>+{Math.round((nextHint?.penaltySec ?? 0) / 60)} min</strong>
-                </p>
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    onClick={() => handleRevealHint(nextHintIndex)}
-                    className="flex-1 rounded-md bg-yellow-500/20 text-yellow-400 py-1 text-sm font-medium hover:bg-yellow-500/30"
-                  >
-                    Ano, ukaž nápovědu
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setShowHintConfirm(null)}
-                    className="flex-1 rounded-md bg-muted text-muted-foreground py-1 text-sm font-medium hover:bg-muted/80"
-                  >
-                    Ne
-                  </button>
-                </div>
+        {hasMoreHints &&
+          (showHintConfirm === nextHintIndex ? (
+            <div className="flex-1 rounded-md bg-yellow-500/10 border border-yellow-500/30 p-3 space-y-2">
+              <p className="text-sm text-yellow-400">
+                Zobrazit nápovědu? Penalizace:{" "}
+                <strong>
+                  +{Math.round((nextHint?.penaltySec ?? 0) / 60)} min
+                </strong>
+              </p>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleRevealHint(nextHintIndex)}
+                  className="flex-1 rounded-md bg-yellow-500/20 text-yellow-400 py-1 text-sm font-medium hover:bg-yellow-500/30"
+                >
+                  Ano, ukaž nápovědu
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowHintConfirm(null)}
+                  className="flex-1 rounded-md bg-muted text-muted-foreground py-1 text-sm font-medium hover:bg-muted/80"
+                >
+                  Ne
+                </button>
               </div>
-            ) : (
-              <button
-                type="button"
-                onClick={() => setShowHintConfirm(nextHintIndex)}
-                className="flex-1 rounded-md border border-yellow-500/30 text-yellow-400 py-2 px-4 text-sm hover:bg-yellow-500/10 transition-colors"
-              >
-                💡 Nápověda ({revealedHintIndices.length + 1}/{level.hints.length})
-              </button>
-            )}
-          </>
-        )}
-
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setShowHintConfirm(nextHintIndex)}
+              className="flex-1 rounded-md border border-yellow-500/30 text-yellow-400 py-2 px-4 text-sm hover:bg-yellow-500/10 transition-colors"
+            >
+              💡 Nápověda ({revealedHintIndices.length + 1}/{level.hints.length}
+              )
+            </button>
+          ))}
         {/* Manual unlock (GPS fallback) */}
         {onManualUnlock && (
           <button

@@ -1,4 +1,4 @@
-import type { Game, GameState } from '@/types/game'
+import type { Game, GameState } from "@/types/game"
 
 interface GameCompleteProps {
   game: Game
@@ -40,16 +40,15 @@ export function GameComplete({
         <div className="text-6xl mb-4">🎉</div>
         <h1 className="text-3xl font-bold text-foreground">Gratulujeme!</h1>
         <p className="text-muted-foreground">
-          Dokončil jsi hru <strong className="text-foreground">{game.name}</strong>
+          Dokončil jsi hru{" "}
+          <strong className="text-foreground">{game.name}</strong>
         </p>
 
         {/* Stats */}
         <div className="grid grid-cols-2 gap-3">
           <div className="rounded-lg border border-border bg-card p-4">
             <p className="text-2xl font-bold text-foreground">{state.score}</p>
-            <p className="text-xs text-muted-foreground">
-              z {maxScore} bodů
-            </p>
+            <p className="text-xs text-muted-foreground">z {maxScore} bodů</p>
           </div>
 
           <div className="rounded-lg border border-border bg-card p-4">
@@ -89,7 +88,7 @@ export function GameComplete({
                   className="flex items-center justify-between text-sm"
                 >
                   <span className="text-foreground">
-                    {isCompleted ? '✅' : '⬜'} {level.name}
+                    {isCompleted ? "✅" : "⬜"} {level.name}
                   </span>
                   <span className="text-muted-foreground text-xs">
                     {level.points} bodů

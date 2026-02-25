@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from "react"
 
 /**
  * Hook to keep the screen awake using the Screen Wake Lock API.
@@ -6,8 +6,8 @@ import { useState, useEffect, useCallback, useRef } from 'react'
  */
 export function useWakeLock() {
   const [isActive, setIsActive] = useState(false)
-  const [isSupported] = useState(() =>
-    typeof navigator !== 'undefined' && 'wakeLock' in navigator,
+  const [isSupported] = useState(
+    () => typeof navigator !== "undefined" && "wakeLock" in navigator,
   )
   const wakeLockRef = useRef<WakeLockSentinel | null>(null)
 
@@ -15,10 +15,10 @@ export function useWakeLock() {
     if (!isSupported) return
 
     try {
-      wakeLockRef.current = await navigator.wakeLock.request('screen')
+      wakeLockRef.current = await navigator.wakeLock.request("screen")
       setIsActive(true)
 
-      wakeLockRef.current.addEventListener('release', () => {
+      wakeLockRef.current.addEventListener("release", () => {
         setIsActive(false)
       })
     } catch {
@@ -38,14 +38,14 @@ export function useWakeLock() {
   // Re-acquire wake lock when page becomes visible again
   useEffect(() => {
     const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible' && isActive) {
+      if (document.visibilityState === "visible" && isActive) {
         request()
       }
     }
 
-    document.addEventListener('visibilitychange', handleVisibilityChange)
+    document.addEventListener("visibilitychange", handleVisibilityChange)
     return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      document.removeEventListener("visibilitychange", handleVisibilityChange)
     }
   }, [isActive, request])
 

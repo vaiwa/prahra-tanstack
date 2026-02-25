@@ -1,161 +1,162 @@
-# GeoPuzzle Hunt — Analýza projektu & MVP Roadmapa
+# Prahra — Roadmapa
 
-## Stav projektu (analýza z 24.2.2026)
-
-### ✅ Co je správně nastaveno
-
-TanStack Start je **vygenerován správně** jako demo/starter projekt. Vše funguje:
-
-| Komponenta              | Stav  | Poznámka                                               |
-| ----------------------- | ----- | ------------------------------------------------------ |
-| TanStack Start + Router | ✅ OK | File-based routing, SSR, route tree se generuje        |
-| TanStack Query          | ✅ OK | QueryClient v routeru, SSR integrace                   |
-| TanStack Form           | ✅ OK | `@tanstack/react-form` v dependencies                  |
-| Vite 7                  | ✅ OK | S pluginy: devtools, tailwind, cloudflare, TS paths    |
-| Tailwind CSS v4         | ✅ OK | S `tw-animate-css`, CSS variables pro theming          |
-| Shadcn UI               | ✅ OK | button, input, label, select, slider, switch, textarea |
-| Drizzle ORM             | ✅ OK | SQLite/better-sqlite3, schema: `todos` tabulka         |
-| Cloudflare Workers      | ✅ OK | `wrangler.jsonc` nakonfigurován, deploy script ready   |
-| Biome                   | ✅ OK | Linting + formatting                                   |
-| TypeScript              | ✅ OK | Strict mode, path aliases (`@/*` → `./src/*`)          |
-| Zod                     | ✅ OK | Pro validace                                           |
-
-### 📁 Struktura routování
-
-```
-/                           → Landing page (demo TanStack features)
-/demo/tanstack-query        → Demo: React Query
-/demo/drizzle               → Demo: Drizzle ORM
-/demo/db-chat               → Demo: TanStack DB chat
-/demo/form/simple           → Demo: Simple form
-/demo/form/address           → Demo: Address form
-/demo/start/server-funcs    → Demo: Server functions
-/demo/start/api-request     → Demo: API request
-/demo/start/ssr/*           → Demo: SSR modes
-/demo/api/names             → API route: names
-/demo/api/tq-todos          → API route: todos
-```
-
-Demo routes jsou čistě pod `/demo/` — to je ideální, game routes půjdou na top level.
-
-### ⚠️ Co je potřeba pro GeoPuzzle upravit/doplnit
-
-1. **Landing page** (`/`) — je to TanStack demo, přepsat na GeoPuzzle landing.
-2. **Header** — je to demo navigace s TanStack logem, přepsat na game UI.
-3. **DB schema** — obsahuje jen `todos`, potřeba přidat game-related tabulky (nebo pro MVP stačí statická data).
-4. **PWA manifest** — `public/manifest.json` existuje, ale je potřeba upravit pro GeoPuzzle (ikony, název, theme color).
-5. **Service Worker** — chybí, bude potřeba pro offline mode.
-6. **Žádná Leaflet/Mapbox dependency** — bude potřeba přidat.
+> Venkovní puzzle hry v Praze. PWA, TanStack Start, Cloudflare Workers.
+> **www.prahra.cz**
 
 ---
 
-## MVP Roadmapa — Kroky k funkčnímu prototypu
+## Co je hotovo (MVP — 24.2.2026)
 
-### Fáze 0: Příprava (Foundation)
+Kompletní hratelný prototyp. Build OK, deploy ready.
 
-- [x] **0.1** Vytvořit `src/types/game.ts` — TypeScript typy (`Game`, `Level`, `Hint`, `GpsLocation`, `Media`, `GameState`)
-- [x] **0.2** Vytvořit `src/data/games/demo-prague-oldtown.ts` — demo hra se 4 body v Praze (Orloj → Týnský chrám → Černá Matka Boží → Prašná brána)
-- [x] **0.3** Nainstalovat `leaflet` + `react-leaflet` + `@types/leaflet`
-- [x] **0.4** Upravit `public/manifest.json` pro PWA (GeoPuzzle Hunt, portrait, dark theme)
+### Herní engine
 
-### Fáze 1: Core Game Engine (Jádro hry) ✅
+- Typy: `Game`, `Level`, `Hint`, `GpsLocation`, `Media`, `GameState`, `AnswerType`
+- `useGeolocation` — GPS tracking + fake teleport pro debug
+- `useWakeLock` — Screen Wake Lock API
+- `useGameState` — stav hry + localStorage persistence (`prahra_{slug}_state`)
+- `haversineDistance`, `formatDistance`, `calculateBearing`
+- `validateAnswer` — exact, regex, multi-choice, qr-code, none
 
-- [x] **1.1** `useGeolocation` hook — `watchPosition`, error handling (CZ chybové hlášky), fake GPS teleport pro debug
-- [x] **1.2** `useWakeLock` hook — Screen Wake Lock API + re-acquire on visibility change
-- [x] **1.3** `useGameState` hook — stav hry s localStorage persistencí, podpora "Pokračovat" / "Začít znovu"
-- [x] **1.4** `haversineDistance(a, b)` + `formatDistance()` + `calculateBearing()` v `src/lib/geo.ts`
-- [x] **1.5** `validateAnswer(input, level)` — exact, regex, multi-choice, qr-code, none v `src/lib/validate-answer.ts`
+### UI komponenty
 
-### Fáze 2: Game UI (Hráčské rozhraní) ✅
+- `GameMap` — Leaflet, modrá tečka hráče, target marker, accuracy + unlock radius circle, lazy-loaded
+- `DistanceIndicator` — barevné kódování (red/orange/yellow/green)
+- `PuzzleCard` — text input, multi-choice, hint reveal s penalizací, GPS fallback
+- `GameProgress` — progress bar, živý čas, skóre, penalizace
+- `GameComplete` — stats grid, breakdown levelů, restart + zpět
+- `DebugPanel` — GPS stav, fake teleport tlačítka pro každý level
 
-- [x] **2.1** Route `/game/$gameSlug` — hlavní herní obrazovka (GameEngine komponenta)
-- [x] **2.2** Komponenta `GameMap` — Leaflet mapa, modrá tečka hráče, zelený radius, lazy-loaded
-- [x] **2.3** Komponenta `DistanceIndicator` — barevné kódování (red > orange > yellow > green)
-- [x] **2.4** Komponenta `PuzzleCard` — text input, multi-choice, potvrzení hintů s penalizací
-- [x] **2.5** Komponenta `GameProgress` — progress bar, živý čas, body, penalizace
-- [x] **2.6** Obrazovka `GameComplete` — stats grid, breakdown levelů, restart + zpět
+### Routes
 
-### Fáze 3: Game Start & Navigation ✅
+- `/` — seznam her (card grid s metadata)
+- `/game/$gameSlug/intro` — intro, popis, pomůcky, "Začít" / "Pokračovat"
+- `/game/$gameSlug` — hlavní herní engine
+- Header skrytý na herních stránkách
 
-- [x] **3.1** Route `/` — přepsán na seznam her (card grid s metadata: místa, čas, obtížnost, tým)
-- [x] **3.2** Route `/game/$gameSlug/intro` — intro obrazovka (popis, pomůcky, "Začít hru" + "Pokračovat")
-- [x] **3.3** Header skrytý na `/game/*` routes, title změněn na "GeoPuzzle Hunt"
+### Data
 
-### Fáze 4: Debug & Testing ✅
+- Demo hra: Praha Staré Město (4 levely: Orloj → Týnský chrám → Černá Matka Boží → Prašná brána)
 
-- [x] **4.1** Debug panel (toggle přes 🐛 ikonku) — GPS stav, přesnost, vzdálenost, raw coords
-- [x] **4.2** Fake GPS teleport — tlačítka pro každý level, "Vypnout fake GPS"
-- [x] **4.3** Tlačítko "GPS nefunguje?" — odemkne puzzle manuálně bez příchodu do radiusu
-- [ ] **4.4** Otestovat na reálném mobilu přes HTTPS (ngrok / Cloudflare tunnel)
+### Stack
 
-### Fáze 5: Polish & PWA (po MVP)
-
-- [ ] **5.1** Service Worker — precache všech game assets při startu hry
-- [ ] **5.2** Offline detection banner — "Jsi offline, hra běží v offline režimu"
-- [ ] **5.3** Kompas mode — `DeviceOrientationEvent` pro šipku směrem k cíli (alternativa k mapě)
-- [ ] **5.4** QR code scanner — pro `answerType: 'qr-code'` levely (HTML5 camera API)
-- [ ] **5.5** Anti-cheat — základní kontrola rychlosti pohybu
-- [ ] **5.6** Vlastní GeoPuzzle Header — logo, navigace, dark/light mode
+- TanStack Start + Router (file-based routing, SSR)
+- TanStack Query (provider ready, zatím nepoužitý)
+- Vite 7, Tailwind CSS v4, Shadcn UI
+- Leaflet + react-leaflet
+- Cloudflare Workers (`wrangler.jsonc`, `npm run deploy`)
+- Biome (lint + format), TypeScript strict, Zod
 
 ---
 
-## Stav implementace (aktualizováno 24.2.2026)
+## Známé nedostatky
 
-```
-Fáze 0 (příprava)     ✅ HOTOVO
-Fáze 1 (hooks/utils)  ✅ HOTOVO
-Fáze 2 (UI)           ✅ HOTOVO
-Fáze 3 (navigace)     ✅ HOTOVO
-Fáze 4 (debug)        🟡 SKORO HOTOVO (zbývá test na mobilu)
-────────────────────────────────────
-MVP:                  ✅ FUNKČNÍ (build OK)
-────────────────────────────────────
-Fáze 5 (polish/PWA)   ⬜ DALŠÍ KROK
-```
+| #   | Problém                                                                                   | Závažnost |
+| --- | ----------------------------------------------------------------------------------------- | --------- |
+| 1   | Žádná 404 stránka                                                                         | nízká     |
+| 2   | `timeLimitSec` v datech existuje, ale engine ho neimplementuje                            | nízká     |
+| 3   | `media` pole existuje v typech, ale nikde se nerenderuje                                  | nízká     |
+| 4   | Popisy jsou plain text, ne Markdown                                                       | nízká     |
+| 5   | Cover obrázek v demo datech (`/games/prague-oldtown/cover.jpg`) neexistuje                | nízká     |
+| 6   | Nepoužité shadcn komponenty: select, slider, switch, textarea                             | úklid     |
+| 7   | `web-vitals` v devDeps — nepoužitý                                                        | úklid     |
+| 8   | TanStack devtools se renderují i v produkci (odstraňuje `@tanstack/devtools-vite` plugin) | info      |
 
-### Další kroky (po pořadí důležitosti)
+---
 
-1. **Otestovat na mobilu** — `npm run dev`, ngrok/CF tunnel, otevřít na telefonu
-2. **Service Worker + offline** — nejkritičtější post-MVP feature
-3. **Kompas mode** — alternativa k mapě, lepší UX venku
-4. **Vlastní Header** — nahradit demo Header za GeoPuzzle navigaci
-5. **Vytvořit druhou hru** — ověřit že data model funguje pro různé typy her
-6. **QR code scanner** — pro `answerType: 'qr-code'`
+## Další kroky
 
-## Co NEŘEŠIT v MVP
+### Fáze 5: Deploy & PWA základ
 
-- ❌ Admin panel / editor tras (data jsou hardcoded v TS souborech)
+Cíl: **Aplikace běží na prahra.cz, funguje jako PWA, testovatelná na mobilu.**
+
+- [x] **5.1** Opravit `<head>` — manifest link, theme-color, apple-touch-icon, apple-mobile-web-app-capable
+- [x] **5.2** Bundlovat Leaflet marker ikony lokálně (zkopírováno do `public/`)
+- [x] **5.3** Error boundary kolem GameEngine + GameMap (+ fallback UI)
+- [x] **5.4** GitHub Actions CI/CD — biome check → tsc → unit testy → build → deploy na CF Workers
+- [x] **5.5** Vitest config + unit testy (19 testů: geo.ts, validate-answer.ts)
+- [x] **5.6** `wrangler.jsonc` name → `"prahra"`, `typecheck` script v package.json
+- [ ] **5.7** Deploy na Cloudflare Workers — `npm run deploy`, ověřit na `prahra.workers.dev`
+- [ ] **5.8** Nastavit doménu `www.prahra.cz` → Cloudflare custom domain
+- [ ] **5.9** Otestovat na reálném mobilu (GPS, wake lock, PWA install prompt)
+- [ ] **5.10** Nastavit GitHub secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`
+
+### Fáze 6: Service Worker & Offline
+
+Cíl: **Hra funguje i bez signálu (les, metro, tunel).**
+
+- [ ] **6.1** Přidat `vite-plugin-pwa` nebo vlastní SW s Workbox
+- [ ] **6.2** Precache: herní assets, map tiles pro oblast hry, game data
+- [ ] **6.3** Offline detection banner — "Jsi offline, hra běží v offline režimu"
+- [ ] **6.4** Sync výsledků po obnovení spojení
+
+### Fáze 7: Herní vylepšení
+
+Cíl: **Bohatší herní zážitek.**
+
+- [ ] **7.1** Kompas mode — `DeviceOrientationEvent`, šipka směrem k cíli (alternativa k mapě)
+- [ ] **7.2** QR code scanner — kamera pro `answerType: 'qr-code'` levely
+- [ ] **7.3** Media rendering — obrázky, audio, video v puzzle popisu + intro
+- [ ] **7.4** Markdown rendering v popisech (lightweight parser, např. `marked` nebo `mdx`)
+- [ ] **7.5** Countdown timer pro `timeLimitSec` > 0
+- [ ] **7.6** Anti-cheat — kontrola rychlosti pohybu (GPS spoofing detection)
+
+### Fáze 8: Obsah & Design
+
+Cíl: **Více her, lepší vizuál.**
+
+- [ ] **8.1** Vytvořit druhou hru — ověřit flexibilitu data modelu
+- [ ] **8.2** Vlastní Header — logo Prahra, navigace, dark/light mode
+- [ ] **8.3** Cover obrázky pro hry (fotky míst)
+- [ ] **8.4** PWA ikony — vlastní logo místo výchozích
+- [ ] **8.5** 404 stránka
+- [ ] **8.6** Odstranit nepoužité shadcn komponenty + web-vitals
+
+### Fáze 9: Backend & Multiplayer (budoucnost)
+
+Cíl: **Sdílení výsledků, leaderboard, admin.**
+
+- [ ] **9.1** API pro ukládání výsledků (Cloudflare D1 / KV)
+- [ ] **9.2** Leaderboard — nejlepší časy pro každou hru
+- [ ] **9.3** Admin panel / editor tras
+- [ ] **9.4** Uživatelské účty (volitelné)
+- [ ] **9.5** Generování QR kódu pro start hry
+
+---
+
+## Co NEŘEŠIT teď
+
 - ❌ Databáze pro game data (stačí statické TS soubory)
 - ❌ Uživatelské účty / autentizace
 - ❌ Leaderboard / multiplayer
 - ❌ Nahrávání fotek
 - ❌ Platby / monetizace
+- ❌ Admin panel / editor tras
+
+---
 
 ## Technické poznámky
 
-### Leaflet v React
-
-Doporučuji `react-leaflet` v5 — nativní React wrapper. Dlaždice: OpenStreetMap (free) nebo Mapy.cz tiles (pro CZ kontext).
+### Cloudflare Workers deploy
 
 ```bash
-pnpm add leaflet react-leaflet
-pnpm add -D @types/leaflet
+npm run deploy  # = npm run build && wrangler deploy
 ```
 
-### Geolocation API gotchas
+`wrangler.jsonc`: name `"prahra"`, `nodejs_compat` flag, `@tanstack/react-start/server-entry`.
 
-- `navigator.geolocation.watchPosition` je ASYNCHRONNÍ a potřebuje `enableHighAccuracy: true`
-- Na iOS Safari vyžaduje HTTPS (localhost je výjimka)
+### Geolocation API
+
+- `watchPosition` s `enableHighAccuracy: true`
+- iOS Safari vyžaduje HTTPS (localhost je výjimka)
 - Accuracy se zlepšuje časem (první fix je nepřesný)
+- Radius nikdy < 20–30 m kvůli GPS drift
 
-### Wake Lock API
+### localStorage
 
-```typescript
-// Podporováno v Chrome, Edge, Safari 16.4+
-const wakeLock = await navigator.wakeLock.request('screen')
-```
+Klíč: `prahra_${gameSlug}_state` → JSON s aktuálním levelem, časem, skóre, hinty.
 
-### localStorage pro game state
+### PWA
 
-Klíč: `geopuzzle_${gameSlug}_state` → JSON s aktuálním levelem, časem, skóre, hinty.
-Při startu hry: zkontrolovat jestli existuje rozpracovaná hra → nabídnout "Pokračovat" / "Začít znovu".
+- `public/manifest.json` — branded "Prahra", standalone, portrait, dark theme (#0f172a)
+- Ikony: `favicon.ico`, `logo192.png`, `logo512.png` (zatím výchozí, potřeba vlastní)

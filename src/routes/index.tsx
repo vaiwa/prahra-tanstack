@@ -1,8 +1,8 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
-import { getPublishedGames } from '@/data/games'
-import { MapPin, Clock, Star, Users } from 'lucide-react'
+import { createFileRoute, Link } from "@tanstack/react-router"
+import { Clock, MapPin, Star, Users } from "lucide-react"
+import { getPublishedGames } from "@/data/games"
 
-export const Route = createFileRoute('/')({ component: HomePage })
+export const Route = createFileRoute("/")({ component: HomePage })
 
 function HomePage() {
   const games = getPublishedGames()
@@ -13,9 +13,7 @@ function HomePage() {
       <section className="relative py-16 px-6 text-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-green-500/10 via-emerald-500/10 to-cyan-500/10" />
         <div className="relative max-w-md mx-auto">
-          <h1 className="text-4xl font-black text-white mb-2">
-            Prahra
-          </h1>
+          <h1 className="text-4xl font-black text-white mb-2">Prahra</h1>
           <p className="text-lg text-gray-400">
             Venkovní puzzle hry v Praze. Žádná instalace — stačí mobil a chuť
             objevovat.
@@ -62,8 +60,7 @@ function HomePage() {
                       {game.levels.length} míst
                     </span>
                     <span className="flex items-center gap-1">
-                      <Clock size={12} />
-                      ~{game.estimatedDurationMin} min
+                      <Clock size={12} />~{game.estimatedDurationMin} min
                     </span>
                     <span className="flex items-center gap-1">
                       <Star size={12} />
@@ -72,7 +69,7 @@ function HomePage() {
                     <span className="flex items-center gap-1">
                       <Users size={12} />
                       {game.maxTeamSize === 1
-                        ? 'Solo'
+                        ? "Solo"
                         : `1–${game.maxTeamSize}`}
                     </span>
                   </div>

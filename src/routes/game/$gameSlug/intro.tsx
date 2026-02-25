@@ -1,9 +1,9 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
-import { getGameBySlug } from '@/data/games'
-import type { Game } from '@/types/game'
-import { MapPin, Clock, Star, Users, ArrowLeft } from 'lucide-react'
+import { createFileRoute, Link } from "@tanstack/react-router"
+import { ArrowLeft, Clock, MapPin, Star, Users } from "lucide-react"
+import { getGameBySlug } from "@/data/games"
+import type { Game } from "@/types/game"
 
-export const Route = createFileRoute('/game/$gameSlug/intro')({
+export const Route = createFileRoute("/game/$gameSlug/intro")({
   component: GameIntro,
 })
 
@@ -16,9 +16,7 @@ function GameIntro() {
       <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
         <div className="text-center space-y-4">
           <p className="text-4xl">🔍</p>
-          <h1 className="text-xl font-bold text-foreground">
-            Hra nenalezena
-          </h1>
+          <h1 className="text-xl font-bold text-foreground">Hra nenalezena</h1>
           <p className="text-muted-foreground">
             Hra &quot;{gameSlug}&quot; neexistuje.
           </p>
@@ -39,10 +37,11 @@ function GameIntro() {
 function GameIntroContent({ game }: { game: Game }) {
   const difficultyStars = Array.from({ length: 5 }, (_, i) => (
     <Star
+      // biome-ignore lint/suspicious/noArrayIndexKey: static list of 5 stars
       key={i}
       size={16}
       className={
-        i < game.difficulty ? 'text-yellow-400 fill-yellow-400' : 'text-muted'
+        i < game.difficulty ? "text-yellow-400 fill-yellow-400" : "text-muted"
       }
     />
   ))
@@ -98,7 +97,7 @@ function GameIntroContent({ game }: { game: Game }) {
             <div>
               <p className="text-sm font-medium text-foreground">
                 {game.maxTeamSize === 1
-                  ? 'Solo'
+                  ? "Solo"
                   : `1–${game.maxTeamSize} hráčů`}
               </p>
               <p className="text-xs text-muted-foreground">Tým</p>
@@ -121,7 +120,10 @@ function GameIntroContent({ game }: { game: Game }) {
             </h3>
             <ul className="space-y-1">
               {game.requiredItems.map((item) => (
-                <li key={item} className="text-sm text-foreground flex items-center gap-2">
+                <li
+                  key={item}
+                  className="text-sm text-foreground flex items-center gap-2"
+                >
                   <span className="w-1.5 h-1.5 rounded-full bg-primary" />
                   {item}
                 </li>
@@ -136,10 +138,10 @@ function GameIntroContent({ game }: { game: Game }) {
             📍 Start
           </h3>
           <p className="text-sm text-foreground">
-            {game.startLocation.label ?? 'Neznámá lokace'}
+            {game.startLocation.label ?? "Neznámá lokace"}
           </p>
           <p className="text-xs text-muted-foreground mt-1">
-            {game.startLocation.lat.toFixed(5)},{' '}
+            {game.startLocation.lat.toFixed(5)},{" "}
             {game.startLocation.lng.toFixed(5)}
           </p>
         </div>

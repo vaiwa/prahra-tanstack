@@ -1,4 +1,4 @@
-import type { GpsLocation } from '@/types/game'
+import type { GpsLocation } from "@/types/game"
 
 /**
  * Calculate the distance between two GPS coordinates using the Haversine formula.

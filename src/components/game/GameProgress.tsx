@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import type { GameState } from '@/types/game'
+import { useEffect, useState } from "react"
+import type { GameState } from "@/types/game"
 
 interface GameProgressProps {
   state: GameState
@@ -12,9 +12,9 @@ function formatTime(seconds: number): string {
   const m = Math.floor((seconds % 3600) / 60)
   const s = seconds % 60
   if (h > 0) {
-    return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+    return `${h}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`
   }
-  return `${m}:${String(s).padStart(2, '0')}`
+  return `${m}:${String(s).padStart(2, "0")}`
 }
 
 export function GameProgress({
@@ -45,9 +45,7 @@ export function GameProgress({
           <span className="text-muted-foreground">
             📍 {completedCount}/{totalLevels}
           </span>
-          <span className="text-muted-foreground">
-            ⏱️ {formatTime(elapsed)}
-          </span>
+          <span className="text-muted-foreground">⏱️ {formatTime(elapsed)}</span>
           {state.penaltyTimeSec > 0 && (
             <span className="text-yellow-400 text-xs">
               (+{formatTime(state.penaltyTimeSec)})

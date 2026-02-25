@@ -1,4 +1,4 @@
-import type { AnswerType } from '@/types/game'
+import type { AnswerType } from "@/types/game"
 
 /**
  * Validate a player's answer against the correct answer.
@@ -12,7 +12,7 @@ export function validateAnswer(
   const trimmed = input.trim()
 
   switch (answerType) {
-    case 'exact': {
+    case "exact": {
       if (Array.isArray(correctAnswer)) {
         return correctAnswer.some(
           (a) => a.toLowerCase() === trimmed.toLowerCase(),
@@ -21,12 +21,12 @@ export function validateAnswer(
       return correctAnswer.toLowerCase() === trimmed.toLowerCase()
     }
 
-    case 'regex': {
+    case "regex": {
       const pattern = Array.isArray(correctAnswer)
         ? correctAnswer[0]
         : correctAnswer
       try {
-        const regex = new RegExp(pattern, 'i')
+        const regex = new RegExp(pattern, "i")
         return regex.test(trimmed)
       } catch {
         // Invalid regex — fall back to exact match
@@ -34,7 +34,7 @@ export function validateAnswer(
       }
     }
 
-    case 'multi-choice': {
+    case "multi-choice": {
       if (Array.isArray(correctAnswer)) {
         // First item in the array is the correct answer
         return correctAnswer[0].toLowerCase() === trimmed.toLowerCase()
@@ -42,7 +42,7 @@ export function validateAnswer(
       return correctAnswer.toLowerCase() === trimmed.toLowerCase()
     }
 
-    case 'qr-code': {
+    case "qr-code": {
       // QR code value must match exactly
       const expected = Array.isArray(correctAnswer)
         ? correctAnswer[0]
@@ -50,7 +50,7 @@ export function validateAnswer(
       return expected === trimmed
     }
 
-    case 'none':
+    case "none":
       // No answer needed — always correct
       return true
 

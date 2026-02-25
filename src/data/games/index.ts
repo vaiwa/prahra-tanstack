@@ -1,5 +1,5 @@
-import { demoPragueOldtown } from './demo-prague-oldtown'
-import type { Game } from '@/types/game'
+import type { Game } from "@/types/game"
+import { demoPragueOldtown } from "./demo-prague-oldtown"
 
 /** All available games indexed by slug */
 export const games: Record<string, Game> = {

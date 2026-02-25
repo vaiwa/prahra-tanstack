@@ -80,7 +80,7 @@ export interface GpsLocation {
 
 export interface Media {
   /** Type of media */
-  type: 'image' | 'audio' | 'video' | 'attachment' | 'youtube'
+  type: "image" | "audio" | "video" | "attachment" | "youtube"
   /** URL or relative path to the file */
   url: string
   /** Alt text / caption */
@@ -88,11 +88,11 @@ export interface Media {
 }
 
 export type AnswerType =
-  | 'exact' // Case-insensitive exact match
-  | 'regex' // RegExp pattern match
-  | 'multi-choice' // answer is string[], player picks one
-  | 'qr-code' // Player scans QR → value must match answer
-  | 'none' // No answer needed, just reach the location
+  | "exact" // Case-insensitive exact match
+  | "regex" // RegExp pattern match
+  | "multi-choice" // answer is string[], player picks one
+  | "qr-code" // Player scans QR → value must match answer
+  | "none" // No answer needed, just reach the location
 
 /** Persisted game state (localStorage) */
 export interface GameState {

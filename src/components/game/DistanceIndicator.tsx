@@ -1,4 +1,4 @@
-import { formatDistance } from '@/lib/geo'
+import { formatDistance } from "@/lib/geo"
 
 interface DistanceIndicatorProps {
   distanceMeters: number
@@ -24,25 +24,25 @@ export function DistanceIndicator({
   let label: string
 
   if (isInRange) {
-    colorClass = 'text-green-400'
-    bgClass = 'bg-green-500/10 border-green-500/30'
-    label = '📍 Jsi na místě!'
+    colorClass = "text-green-400"
+    bgClass = "bg-green-500/10 border-green-500/30"
+    label = "📍 Jsi na místě!"
   } else if (distanceMeters < 50) {
-    colorClass = 'text-green-400'
-    bgClass = 'bg-green-500/10 border-green-500/30'
-    label = 'Už jsi blízko!'
+    colorClass = "text-green-400"
+    bgClass = "bg-green-500/10 border-green-500/30"
+    label = "Už jsi blízko!"
   } else if (distanceMeters < 100) {
-    colorClass = 'text-yellow-400'
-    bgClass = 'bg-yellow-500/10 border-yellow-500/30'
-    label = 'Skoro tam'
+    colorClass = "text-yellow-400"
+    bgClass = "bg-yellow-500/10 border-yellow-500/30"
+    label = "Skoro tam"
   } else if (distanceMeters < 500) {
-    colorClass = 'text-orange-400'
-    bgClass = 'bg-orange-500/10 border-orange-500/30'
-    label = 'Jdi dál'
+    colorClass = "text-orange-400"
+    bgClass = "bg-orange-500/10 border-orange-500/30"
+    label = "Jdi dál"
   } else {
-    colorClass = 'text-red-400'
-    bgClass = 'bg-red-500/10 border-red-500/30'
-    label = 'Daleko'
+    colorClass = "text-red-400"
+    bgClass = "bg-red-500/10 border-red-500/30"
+    label = "Daleko"
   }
 
   return (

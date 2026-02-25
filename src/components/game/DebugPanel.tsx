@@ -1,4 +1,4 @@
-import type { Level, GpsLocation } from '@/types/game'
+import type { GpsLocation, Level } from "@/types/game"
 
 interface DebugPanelProps {
   position: GpsLocation | null
@@ -39,23 +39,25 @@ export function DebugPanel({
       {/* Current state */}
       <div className="text-xs text-muted-foreground space-y-1 font-mono">
         <p>
-          GPS: {isTracking ? '🟢 tracking' : '🔴 stopped'}
+          GPS: {isTracking ? "🟢 tracking" : "🔴 stopped"}
           {position
             ? ` [${position.lat.toFixed(5)}, ${position.lng.toFixed(5)}]`
-            : ' [no position]'}
+            : " [no position]"}
         </p>
-        <p>Accuracy: {accuracy ? `±${Math.round(accuracy)}m` : 'N/A'}</p>
+        <p>Accuracy: {accuracy ? `±${Math.round(accuracy)}m` : "N/A"}</p>
         <p>
-          Target: {currentLevel?.name ?? 'N/A'}
+          Target: {currentLevel?.name ?? "N/A"}
           {distanceToTarget !== null
             ? ` (${Math.round(distanceToTarget)}m away)`
-            : ''}
+            : ""}
         </p>
       </div>
 
       {/* Teleport buttons */}
       <div className="space-y-1">
-        <p className="text-xs text-orange-400 font-medium">Teleport k levelu:</p>
+        <p className="text-xs text-orange-400 font-medium">
+          Teleport k levelu:
+        </p>
         <div className="flex flex-wrap gap-1">
           {levels.map((level) => (
             <button
@@ -64,8 +66,8 @@ export function DebugPanel({
               onClick={() => onTeleport(level.location)}
               className={`text-xs px-2 py-1 rounded border transition-colors ${
                 currentLevel?.id === level.id
-                  ? 'border-orange-500 bg-orange-500/20 text-orange-400'
-                  : 'border-border text-muted-foreground hover:border-orange-500/50'
+                  ? "border-orange-500 bg-orange-500/20 text-orange-400"
+                  : "border-border text-muted-foreground hover:border-orange-500/50"
               }`}
             >
               {level.order}. {level.name}

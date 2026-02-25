@@ -1,17 +1,24 @@
-import { useEffect, useRef } from 'react'
-import type { GpsLocation } from '@/types/game'
+import { useEffect, useRef } from "react"
+import type { GpsLocation } from "@/types/game"
 
 // Leaflet CSS must be imported in the component that uses the map
-import 'leaflet/dist/leaflet.css'
+import "leaflet/dist/leaflet.css"
 
-import L from 'leaflet'
-import { MapContainer, TileLayer, Marker, Popup, Circle, useMap } from 'react-leaflet'
+import L from "leaflet"
+import {
+  Circle,
+  MapContainer,
+  Marker,
+  Popup,
+  TileLayer,
+  useMap,
+} from "react-leaflet"
 
-// Fix default marker icons in bundled environments
+// Fix default marker icons — bundled locally instead of unpkg CDN
 const defaultIcon = L.icon({
-  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+  iconUrl: "/marker-icon.png",
+  iconRetinaUrl: "/marker-icon-2x.png",
+  shadowUrl: "/marker-shadow.png",
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
@@ -19,7 +26,7 @@ const defaultIcon = L.icon({
 })
 
 const playerIcon = L.divIcon({
-  className: 'player-marker',
+  className: "player-marker",
   html: `<div style="
     width: 16px;
     height: 16px;
@@ -72,7 +79,7 @@ export function GameMap({
       <MapContainer
         center={[center.lat, center.lng]}
         zoom={16}
-        style={{ width: '100%', height: '100%' }}
+        style={{ width: "100%", height: "100%" }}
         zoomControl={false}
         attributionControl={false}
       >
@@ -81,10 +88,18 @@ export function GameMap({
         {/* Player position */}
         {playerPosition && (
           <>
-            <Marker position={[playerPosition.lat, playerPosition.lng]} icon={playerIcon}>
+            <Marker
+              position={[playerPosition.lat, playerPosition.lng]}
+              icon={playerIcon}
+            >
               <Popup>
                 Tvoje pozice
-                {accuracy && <span className="text-xs text-muted-foreground"> (±{Math.round(accuracy)}m)</span>}
+                {accuracy && (
+                  <span className="text-xs text-muted-foreground">
+                    {" "}
+                    (±{Math.round(accuracy)}m)
+                  </span>
+                )}
               </Popup>
             </Marker>
 
@@ -94,8 +109,8 @@ export function GameMap({
                 center={[playerPosition.lat, playerPosition.lng]}
                 radius={accuracy}
                 pathOptions={{
-                  color: '#3b82f6',
-                  fillColor: '#3b82f6',
+                  color: "#3b82f6",
+                  fillColor: "#3b82f6",
                   fillOpacity: 0.1,
                   weight: 1,
                 }}
@@ -109,8 +124,11 @@ export function GameMap({
         {/* Target position */}
         {showTarget && (
           <>
-            <Marker position={[targetPosition.lat, targetPosition.lng]} icon={defaultIcon}>
-              <Popup>{targetPosition.label ?? 'Cíl'}</Popup>
+            <Marker
+              position={[targetPosition.lat, targetPosition.lng]}
+              icon={defaultIcon}
+            >
+              <Popup>{targetPosition.label ?? "Cíl"}</Popup>
             </Marker>
 
             {/* Unlock radius circle */}
@@ -118,11 +136,11 @@ export function GameMap({
               center={[targetPosition.lat, targetPosition.lng]}
               radius={unlockRadius}
               pathOptions={{
-                color: '#22c55e',
-                fillColor: '#22c55e',
+                color: "#22c55e",
+                fillColor: "#22c55e",
                 fillOpacity: 0.1,
                 weight: 2,
-                dashArray: '5, 10',
+                dashArray: "5, 10",
               }}
             />
           </>
