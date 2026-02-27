@@ -13,7 +13,7 @@ function GameIntro() {
 
   if (!game) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
         <div className="text-center space-y-4">
           <p className="text-4xl">🔍</p>
           <h1 className="text-xl font-bold text-foreground">Hra nenalezena</h1>
@@ -47,7 +47,7 @@ function GameIntroContent({ game }: { game: Game }) {
   ))
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-b from-background via-card to-background">
       {/* Back link */}
       <div className="p-4">
         <Link

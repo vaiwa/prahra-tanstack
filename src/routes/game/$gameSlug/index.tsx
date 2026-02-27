@@ -28,7 +28,7 @@ function GamePlay() {
 
   if (!game) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
         <div className="text-center space-y-4">
           <p className="text-4xl">🔍</p>
           <h1 className="text-xl font-bold text-foreground">Hra nenalezena</h1>
@@ -123,7 +123,7 @@ function GameEngine({ gameSlug }: { gameSlug: string }) {
   // Solved message overlay
   if (solvedMessage) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-b from-background via-card to-background flex items-center justify-center p-4">
         <div className="max-w-md w-full text-center space-y-4 animate-in fade-in">
           <p className="text-5xl">🎯</p>
           <p className="text-lg text-foreground leading-relaxed whitespace-pre-line">
@@ -135,7 +135,7 @@ function GameEngine({ gameSlug }: { gameSlug: string }) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-b from-background via-card to-background">
       {/* Header */}
       <div className="p-4 flex items-center justify-between">
         <Link

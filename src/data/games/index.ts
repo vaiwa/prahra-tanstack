@@ -1,9 +1,11 @@
 import type { Game } from "@/types/game"
 import { demoPragueOldtown } from "./demo-prague-oldtown"
+import { testLevels } from "./test-levels"
 
 /** All available games indexed by slug */
 export const games: Record<string, Game> = {
   [demoPragueOldtown.slug]: demoPragueOldtown,
+  [testLevels.slug]: testLevels,
 }
 
 /** Get all published games */

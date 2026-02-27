@@ -34,7 +34,7 @@ export function GameComplete({
   const maxScore = game.levels.reduce((sum, l) => sum + l.points, 0)
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-b from-background via-card to-background flex items-center justify-center p-4">
       <div className="max-w-md w-full text-center space-y-6">
         {/* Celebration */}
         <div className="text-6xl mb-4">🎉</div>

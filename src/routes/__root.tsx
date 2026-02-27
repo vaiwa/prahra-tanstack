@@ -30,7 +30,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       },
       {
         name: "theme-color",
-        content: "#0f172a",
+        content: "#2b1d0e",
       },
       {
         name: "apple-mobile-web-app-capable",
@@ -65,7 +65,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   const isGameRoute = pathname.startsWith("/game/")
 
   return (
-    <html lang="cs">
+    <html lang="cs" className="dark">
       <head>
         <HeadContent />
       </head>

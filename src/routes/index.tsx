@@ -8,13 +8,13 @@ function HomePage() {
   const games = getPublishedGames()
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-b from-background via-card to-background">
       {/* Hero */}
       <section className="relative py-16 px-6 text-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-green-500/10 via-emerald-500/10 to-cyan-500/10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5" />
         <div className="relative max-w-md mx-auto">
-          <h1 className="text-4xl font-black text-white mb-2">Prahra</h1>
-          <p className="text-lg text-gray-400">
+          <h1 className="text-4xl font-black text-primary mb-2">Prahra</h1>
+          <p className="text-lg text-muted-foreground">
             Venkovní puzzle hry v Praze. Žádná instalace — stačí mobil a chuť
             objevovat.
           </p>
