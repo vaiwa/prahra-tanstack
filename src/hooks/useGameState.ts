@@ -127,9 +127,7 @@ export function useGameState(game: Game) {
   /** Get elapsed time in seconds (without penalty) */
   const getElapsedTimeSec = useCallback((): number => {
     const start = new Date(state.startedAt).getTime()
-    const end = state.completedAt
-      ? new Date(state.completedAt).getTime()
-      : Date.now()
+    const end = state.completedAt ? new Date(state.completedAt).getTime() : Date.now()
     return Math.floor((end - start) / 1000)
   }, [state.startedAt, state.completedAt])
 

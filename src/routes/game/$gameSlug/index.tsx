@@ -14,9 +14,7 @@ import { useWakeLock } from "@/hooks/useWakeLock"
 import { haversineDistance } from "@/lib/geo"
 
 // Lazy load the map (Leaflet is heavy)
-const GameMap = lazy(() =>
-  import("@/components/game/GameMap").then((m) => ({ default: m.GameMap })),
-)
+const GameMap = lazy(() => import("@/components/game/GameMap").then((m) => ({ default: m.GameMap })))
 
 export const Route = createFileRoute("/game/$gameSlug/")({
   component: GamePlay,
@@ -62,8 +60,7 @@ function GameEngine({ gameSlug }: { gameSlug: string }) {
   const wakeLock = useWakeLock()
   const gameState = useGameState(game)
 
-  const { state, currentLevel, revealHint, completeLevel, resetGame } =
-    gameState
+  const { state, currentLevel, revealHint, completeLevel, resetGame } = gameState
 
   // Start tracking GPS and wake lock on mount
   // biome-ignore lint/correctness/useExhaustiveDependencies: intentional mount-only effect
@@ -126,9 +123,7 @@ function GameEngine({ gameSlug }: { gameSlug: string }) {
       <div className="min-h-screen bg-gradient-to-b from-background via-card to-background flex items-center justify-center p-4">
         <div className="max-w-md w-full text-center space-y-4 animate-in fade-in">
           <p className="text-5xl">🎯</p>
-          <p className="text-lg text-foreground leading-relaxed whitespace-pre-line">
-            {solvedMessage}
-          </p>
+          <p className="text-lg text-foreground leading-relaxed whitespace-pre-line">{solvedMessage}</p>
         </div>
       </div>
     )
@@ -150,9 +145,7 @@ function GameEngine({ gameSlug }: { gameSlug: string }) {
           type="button"
           onClick={() => setDebugMode((d) => !d)}
           className={`p-2 rounded-lg transition-colors ${
-            debugMode
-              ? "bg-orange-500/20 text-orange-400"
-              : "text-muted-foreground hover:text-foreground"
+            debugMode ? "bg-orange-500/20 text-orange-400" : "text-muted-foreground hover:text-foreground"
           }`}
           title="Debug mode"
         >
@@ -162,11 +155,7 @@ function GameEngine({ gameSlug }: { gameSlug: string }) {
 
       <div className="max-w-md mx-auto px-4 pb-8 space-y-4">
         {/* Progress */}
-        <GameProgress
-          state={state}
-          totalLevels={game.levels.length}
-          getElapsedTimeSec={gameState.getElapsedTimeSec}
-        />
+        <GameProgress state={state} totalLevels={game.levels.length} getElapsedTimeSec={gameState.getElapsedTimeSec} />
 
         {/* GPS Error */}
         {geo.error && (
@@ -180,18 +169,14 @@ function GameEngine({ gameSlug }: { gameSlug: string }) {
           <ErrorBoundary
             fallback={
               <div className="w-full h-64 rounded-lg bg-muted flex items-center justify-center">
-                <p className="text-sm text-muted-foreground">
-                  Mapa není dostupná
-                </p>
+                <p className="text-sm text-muted-foreground">Mapa není dostupná</p>
               </div>
             }
           >
             <Suspense
               fallback={
                 <div className="w-full h-64 rounded-lg bg-muted animate-pulse flex items-center justify-center">
-                  <p className="text-sm text-muted-foreground">
-                    Načítám mapu...
-                  </p>
+                  <p className="text-sm text-muted-foreground">Načítám mapu...</p>
                 </div>
               }
             >
@@ -208,10 +193,7 @@ function GameEngine({ gameSlug }: { gameSlug: string }) {
 
         {/* Distance indicator */}
         {currentLevel && distanceToTarget !== null && (
-          <DistanceIndicator
-            distanceMeters={distanceToTarget}
-            unlockRadius={currentLevel.unlockRadius}
-          />
+          <DistanceIndicator distanceMeters={distanceToTarget} unlockRadius={currentLevel.unlockRadius} />
         )}
 
         {/* Puzzle card — shows when in range, no GPS, or forced */}

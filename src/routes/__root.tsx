@@ -9,6 +9,7 @@ import {
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools"
 import Header from "../components/Header"
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools"
+import { useServiceWorkerUpdate } from "../hooks/useServiceWorkerUpdate"
 import appCss from "../styles.css?url"
 
 interface MyRouterContext {
@@ -63,6 +64,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 function RootDocument({ children }: { children: React.ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname })
   const isGameRoute = pathname.startsWith("/game/")
+  const { updateAvailable, refresh } = useServiceWorkerUpdate()
 
   return (
     <html lang="cs" className="dark">
@@ -85,6 +87,21 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           ]}
         />
         <Scripts />
+        {updateAvailable && (
+          <div className="fixed bottom-4 inset-x-4 z-50 flex justify-center">
+            <div className="max-w-md w-full rounded-xl border border-border bg-card/95 backdrop-blur px-4 py-3 shadow-lg flex items-center justify-between gap-3">
+              <span className="text-sm text-foreground">
+                Je dostupna nova verze aplikace.
+              </span>
+              <button
+                onClick={refresh}
+                className="px-3 py-1.5 text-sm font-semibold rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition"
+              >
+                Aktualizovat
+              </button>
+            </div>
+          </div>
+        )}
       </body>
     </html>
   )

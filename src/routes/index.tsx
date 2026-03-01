@@ -1,23 +1,33 @@
 import { createFileRoute, Link } from "@tanstack/react-router"
 import { Clock, MapPin, Star, Users } from "lucide-react"
 import { getPublishedGames } from "@/data/games"
+import { usePWAInstallPrompt } from "@/hooks/usePWAInstallPrompt"
 
 export const Route = createFileRoute("/")({ component: HomePage })
 
 function HomePage() {
   const games = getPublishedGames()
+  const { canInstall, install } = usePWAInstallPrompt()
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-card to-background">
+    <div className="min-h-screen bg-linear-to-b from-background via-card to-background">
       {/* Hero */}
       <section className="relative py-16 px-6 text-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5" />
+        <div className="absolute inset-0 bg-linear-to-r from-primary/5 via-primary/10 to-primary/5" />
         <div className="relative max-w-md mx-auto">
           <h1 className="text-4xl font-black text-primary mb-2">Prahra</h1>
           <p className="text-lg text-muted-foreground">
             Venkovní puzzle hry v Praze. Žádná instalace — stačí mobil a chuť
             objevovat.
           </p>
+          {canInstall && (
+            <button
+              onClick={install}
+              className="mt-6 px-6 py-2 rounded-full bg-primary text-primary-foreground font-semibold shadow hover:bg-primary/90 transition-all border border-border"
+            >
+              Instalovat aplikaci
+            </button>
+          )}
         </div>
       </section>
 
