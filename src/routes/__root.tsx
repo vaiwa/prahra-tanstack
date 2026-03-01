@@ -1,3 +1,5 @@
+import { ClerkProvider, SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react"
+import { dark } from "@clerk/themes"
 import { TanStackDevtools } from "@tanstack/react-devtools"
 import type { QueryClient } from "@tanstack/react-query"
 import { createRootRouteWithContext, HeadContent, Scripts, useRouterState } from "@tanstack/react-router"
@@ -11,6 +13,8 @@ import appCss from "../styles.css?url"
 interface MyRouterContext {
   queryClient: QueryClient
 }
+
+const clerkPublishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   head: () => ({
@@ -63,47 +67,90 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   const { updateAvailable, refresh } = useServiceWorkerUpdate()
   const isOnline = useOnlineStatus()
 
+  const appContent = (
+    <>
+      {!isGameRoute && <Header />}
+      {isGameRoute && (
+        <div className="fixed top-3 right-4 z-50 flex h-9 items-center justify-end">
+          <SignedOut>
+            <SignInButton mode="modal">
+              <button
+                type="button"
+                className="h-9 rounded-full border border-border bg-card/90 backdrop-blur px-3 text-sm text-foreground hover:bg-muted/50 transition"
+              >
+                Prihlasit
+              </button>
+            </SignInButton>
+          </SignedOut>
+          <SignedIn>
+            <div className="flex items-center">
+              <UserButton afterSignOutUrl="/" />
+            </div>
+          </SignedIn>
+        </div>
+      )}
+      {children}
+      <TanStackDevtools
+        config={{
+          position: "bottom-right",
+        }}
+        plugins={[
+          {
+            name: "Tanstack Router",
+            render: <TanStackRouterDevtoolsPanel />,
+          },
+          TanStackQueryDevtools,
+        ]}
+      />
+      <Scripts />
+      {!isOnline && (
+        <div className="fixed top-3 inset-x-4 z-50 flex justify-center">
+          <div className="max-w-md w-full rounded-xl border border-border bg-card/95 backdrop-blur px-4 py-2 shadow-lg text-sm text-foreground text-center">
+            Jsi offline. Hra bezi v offline rezimu.
+          </div>
+        </div>
+      )}
+      {updateAvailable && (
+        <div className="fixed bottom-4 inset-x-4 z-50 flex justify-center">
+          <div className="max-w-md w-full rounded-xl border border-border bg-card/95 backdrop-blur px-4 py-3 shadow-lg flex items-center justify-between gap-3">
+            <span className="text-sm text-foreground">Je dostupna nova verze aplikace.</span>
+            <button
+              type="button"
+              onClick={refresh}
+              className="px-3 py-1.5 text-sm font-semibold rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition"
+            >
+              Aktualizovat
+            </button>
+          </div>
+        </div>
+      )}
+    </>
+  )
+
   return (
     <html lang="cs" className="dark">
       <head>
         <HeadContent />
       </head>
       <body>
-        {!isGameRoute && <Header />}
-        {children}
-        <TanStackDevtools
-          config={{
-            position: "bottom-right",
-          }}
-          plugins={[
-            {
-              name: "Tanstack Router",
-              render: <TanStackRouterDevtoolsPanel />,
-            },
-            TanStackQueryDevtools,
-          ]}
-        />
-        <Scripts />
-        {!isOnline && (
-          <div className="fixed top-3 inset-x-4 z-50 flex justify-center">
-            <div className="max-w-md w-full rounded-xl border border-border bg-card/95 backdrop-blur px-4 py-2 shadow-lg text-sm text-foreground text-center">
-              Jsi offline. Hra bezi v offline rezimu.
-            </div>
-          </div>
-        )}
-        {updateAvailable && (
-          <div className="fixed bottom-4 inset-x-4 z-50 flex justify-center">
-            <div className="max-w-md w-full rounded-xl border border-border bg-card/95 backdrop-blur px-4 py-3 shadow-lg flex items-center justify-between gap-3">
-              <span className="text-sm text-foreground">Je dostupna nova verze aplikace.</span>
-              <button
-                type="button"
-                onClick={refresh}
-                className="px-3 py-1.5 text-sm font-semibold rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition"
-              >
-                Aktualizovat
-              </button>
-            </div>
-          </div>
+        {clerkPublishableKey ? (
+          <ClerkProvider
+            publishableKey={clerkPublishableKey}
+            appearance={{
+              baseTheme: dark,
+              variables: {
+                colorPrimary: "#2b1d0e",
+                colorBackground: "#1a140b",
+                colorInputBackground: "#1f170c",
+                colorText: "#f5e9d0",
+                colorTextSecondary: "#cbb891",
+              },
+            }}
+          >
+            {appContent}
+          </ClerkProvider>
+        ) : (
+          appContent
         )}
       </body>
     </html>

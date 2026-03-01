@@ -14,9 +14,14 @@
     "verify": "run-s check typecheck test",
     "clean": "rimraf node_modules dist",
     "clean-install": "npm run clean && npm install",
-    "deploy": "npm run build && wrangler deploy"
+    "deploy": "npm run build && wrangler deploy",
+    "dev:api": "wrangler dev --config api/wrangler.api.jsonc",
+    "deploy:api": "wrangler deploy --config api/wrangler.api.jsonc"
   },
   "dependencies": {
+    "@clerk/backend": "^2.33.0",
+    "@clerk/clerk-react": "^5.61.3",
+    "@clerk/themes": "^2.4.57",
     "@cloudflare/vite-plugin": "^1.13.8",
     "@radix-ui/react-label": "^2.1.8",
     "@radix-ui/react-select": "^2.2.6",
@@ -34,6 +39,7 @@
     "@tanstack/router-plugin": "^1.132.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "hono": "^4.12.3",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.561.0",
     "react": "^19.2.0",
@@ -47,6 +53,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.4",
+    "@cloudflare/workers-types": "^4.20260301.1",
     "@tanstack/devtools-vite": "^0.3.11",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.2.0",

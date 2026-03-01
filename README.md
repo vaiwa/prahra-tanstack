@@ -43,6 +43,8 @@ Otevři http://localhost:3000
 | `npm run clean`         | Smaže node_modules + dist                |
 | `npm run clean-install` | Clean + npm install                      |
 | `npm run deploy`        | Build + deploy na Cloudflare Workers     |
+| `npm run dev:api`       | Spustí API worker lokálně (wrangler)     |
+| `npm run deploy:api`    | Deploy API worker                        |
 
 ## Struktura projektu
 
@@ -73,3 +75,36 @@ GitHub Actions workflow (`.github/workflows/ci.yml`):
 3. **deploy** — Automatický deploy na Cloudflare Workers (jen push do `main`)
 
 Vyžaduje GitHub secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`
+
+## API worker (Clerk + D1)
+
+API běží jako samostatný Cloudflare Worker na `/api/*`.
+
+Nastavení:
+
+1. V `api/wrangler.api.jsonc` doplň `database_id` pro D1.
+2. Spusť migrace:
+
+- `wrangler d1 migrations apply prahra-db --config api/wrangler.api.jsonc`
+
+3. Nastav Clerk secret pro API worker:
+
+- `wrangler secret put CLERK_SECRET_KEY --config api/wrangler.api.jsonc`
+
+Lokální běh:
+
+```bash
+npm run dev:api
+```
+
+Poznamka:
+
+API ocekava `Authorization: Bearer <token>` od Clerk. Na klientu pouzij:
+
+```ts
+const token = await getToken()
+fetch('/api/progress/my-game', {
+  method: 'POST',
+  headers: { Authorization: `Bearer ${token}` },
+})
+```

@@ -108,6 +108,15 @@ Cíl: **Hra funguje i bez signálu (les, metro, tunel).**
 - [x] **6.3** Offline detection banner — "Jsi offline, hra běží v offline režimu"
 - [ ] **6.4** Sync výsledků po obnovení spojení
 
+### Fáze 6.5: Auth & Progress (Clerk + API)
+
+Cíl: **Uživatel ma ucet a prubezny progres se uklada do D1.**
+
+- [x] **6.5.1** Samostatny API worker na `/api/*`
+- [x] **6.5.2** Clerk auth (Bearer token verify)
+- [ ] **6.5.3** Klientsky sync prubezneho progresu
+- [ ] **6.5.4** Migrace D1 aplikovane na produkci
+
 ### Fáze 7: Herní vylepšení
 
 Cíl: **Bohatší herní zážitek.**

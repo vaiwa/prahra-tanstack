@@ -1,3 +1,4 @@
+import { SignedIn, SignedOut, SignInButton } from "@clerk/clerk-react"
 import { createFileRoute, Link } from "@tanstack/react-router"
 import { ArrowLeft, Bug } from "lucide-react"
 import { lazy, Suspense, useEffect, useMemo, useState } from "react"
@@ -10,6 +11,8 @@ import { PuzzleCard } from "@/components/game/PuzzleCard"
 import { getGameBySlug } from "@/data/games"
 import { useGameState } from "@/hooks/useGameState"
 import { useGeolocation } from "@/hooks/useGeolocation"
+import { useProgressLoad } from "@/hooks/useProgressLoad"
+import { useProgressSync } from "@/hooks/useProgressSync"
 import { useWakeLock } from "@/hooks/useWakeLock"
 import { featureFlags } from "@/lib/featureFlags"
 import { haversineDistance } from "@/lib/geo"
@@ -44,7 +47,29 @@ function GamePlay() {
 
   return (
     <ErrorBoundary>
-      <GameEngine gameSlug={gameSlug} />
+      <SignedIn>
+        <GameEngine gameSlug={gameSlug} />
+      </SignedIn>
+      <SignedOut>
+        <div className="min-h-screen bg-background flex items-center justify-center p-4">
+          <div className="text-center space-y-4 max-w-md">
+            <p className="text-4xl">🔒</p>
+            <h1 className="text-xl font-bold text-foreground">Přihlaš se pro start hry</h1>
+            <p className="text-sm text-muted-foreground">Pro pokračování potřebujeme ověřit tvůj účet.</p>
+            <SignInButton mode="modal">
+              <button
+                type="button"
+                className="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground py-2 px-4 text-sm font-medium hover:bg-primary/90 transition-colors"
+              >
+                Přihlásit se
+              </button>
+            </SignInButton>
+            <Link to="/" className="block text-sm text-muted-foreground hover:text-foreground transition-colors">
+              Zpět na seznam
+            </Link>
+          </div>
+        </div>
+      </SignedOut>
     </ErrorBoundary>
   )
 }
@@ -61,7 +86,11 @@ function GameEngine({ gameSlug }: { gameSlug: string }) {
   const wakeLock = useWakeLock()
   const gameState = useGameState(game)
 
-  const { state, currentLevel, revealHint, completeLevel, unlockLevel, resetGame } = gameState
+  const { state, currentLevel, revealHint, completeLevel, unlockLevel, resetGame, mergeRemoteProgress } = gameState
+
+  useProgressLoad({ gameSlug, onRemoteProgress: mergeRemoteProgress })
+
+  useProgressSync({ gameSlug, state, currentLevel })
 
   // Start tracking GPS and wake lock on mount
   // biome-ignore lint/correctness/useExhaustiveDependencies: intentional mount-only effect
@@ -144,7 +173,7 @@ function GameEngine({ gameSlug }: { gameSlug: string }) {
   return (
     <div className="min-h-screen bg-linear-to-b from-background via-card to-background">
       {/* Header */}
-      <div className="p-4 flex items-center justify-between">
+      <div className="p-4 pr-16 flex items-center justify-between">
         <Link
           to="/game/$gameSlug/intro"
           params={{ gameSlug }}

@@ -1,6 +1,23 @@
 import { useCallback, useEffect, useState } from "react"
 import type { Game, GameState } from "@/types/game"
 
+type RemoteProgress = {
+  progress: {
+    started_at: string | null
+    current_level_index: number
+    total_penalty_sec: number
+    is_complete: number
+    completed_at: string | null
+  } | null
+  levels: Array<{
+    level_id: string
+    started_at: string | null
+    completed_at: string | null
+    hints_used: number
+    penalty_sec: number
+  }>
+}
+
 const STORAGE_PREFIX = "prahra_"
 
 function getStorageKey(gameSlug: string): string {
@@ -47,6 +64,22 @@ function normalizeState(saved: GameState): GameState {
     ...saved,
     unlockedLevels: saved.unlockedLevels ?? {},
   }
+}
+
+function progressScore(state: GameState): number {
+  const completed = Object.keys(state.completedLevels).length
+  return (state.isComplete ? 10000 : 0) + state.currentLevelIndex * 100 + completed
+}
+
+function mergeHintIndices(existing: number[], incoming: number[]): number[] {
+  const merged = new Set<number>()
+  existing.forEach((idx) => {
+    merged.add(idx)
+  })
+  incoming.forEach((idx) => {
+    merged.add(idx)
+  })
+  return Array.from(merged).sort((a, b) => a - b)
 }
 
 /**
@@ -147,6 +180,60 @@ export function useGameState(game: Game) {
     if (saved) setState(normalizeState(saved))
   }, [game.slug])
 
+  /** Merge remote progress into local state (prefers more advanced progress) */
+  const mergeRemoteProgress = useCallback(
+    (remote: RemoteProgress) => {
+      setState((prev) => {
+        if (!remote.progress) return prev
+
+        const revealedHints: GameState["revealedHints"] = { ...prev.revealedHints }
+        const completedLevels: GameState["completedLevels"] = { ...prev.completedLevels }
+
+        remote.levels.forEach((level) => {
+          if (level.completed_at) {
+            completedLevels[level.level_id] = level.completed_at
+          }
+
+          const maxHints = game.levels.find((l) => l.id === level.level_id)?.hints.length ?? 0
+          const hintsUsed = Math.min(level.hints_used ?? 0, maxHints)
+          if (hintsUsed > 0) {
+            const incoming = Array.from({ length: hintsUsed }, (_, i) => i)
+            const existing = revealedHints[level.level_id] ?? []
+            revealedHints[level.level_id] = mergeHintIndices(existing, incoming)
+          }
+        })
+
+        const remoteState: GameState = normalizeState({
+          ...prev,
+          startedAt: remote.progress.started_at ?? prev.startedAt,
+          currentLevelIndex: remote.progress.current_level_index ?? prev.currentLevelIndex,
+          penaltyTimeSec: Math.max(prev.penaltyTimeSec, remote.progress.total_penalty_sec ?? 0),
+          isComplete: Boolean(remote.progress.is_complete),
+          completedAt: remote.progress.completed_at ?? prev.completedAt,
+          revealedHints,
+          completedLevels,
+        })
+
+        const localScore = progressScore(prev)
+        const remoteScore = progressScore(remoteState)
+
+        if (remoteScore > localScore) {
+          return remoteState
+        }
+
+        return normalizeState({
+          ...prev,
+          revealedHints,
+          completedLevels,
+          penaltyTimeSec: Math.max(prev.penaltyTimeSec, remoteState.penaltyTimeSec),
+          isComplete: prev.isComplete || remoteState.isComplete,
+          completedAt: prev.completedAt ?? remoteState.completedAt,
+        })
+      })
+    },
+    [game.levels],
+  )
+
   /** Get elapsed time in seconds (without penalty) */
   const getElapsedTimeSec = useCallback((): number => {
     const start = new Date(state.startedAt).getTime()
@@ -168,6 +255,7 @@ export function useGameState(game: Game) {
     resetGame,
     hasSavedGame,
     continueSavedGame,
+    mergeRemoteProgress,
     getElapsedTimeSec,
     getTotalTimeSec,
   }

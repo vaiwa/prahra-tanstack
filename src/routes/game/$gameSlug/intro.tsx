@@ -1,3 +1,4 @@
+import { SignedIn, SignedOut, SignInButton } from "@clerk/clerk-react"
 import { createFileRoute, Link } from "@tanstack/react-router"
 import { ArrowLeft, Clock, MapPin, Star, Users } from "lucide-react"
 import { getGameBySlug } from "@/data/games"
@@ -43,7 +44,7 @@ function GameIntroContent({ game }: { game: Game }) {
   ))
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-card to-background">
+    <div className="min-h-screen bg-linear-to-b from-background via-card to-background">
       {/* Back link */}
       <div className="p-4">
         <Link
@@ -125,13 +126,28 @@ function GameIntroContent({ game }: { game: Game }) {
         </div>
 
         {/* Start button */}
-        <Link
-          to="/game/$gameSlug"
-          params={{ gameSlug: game.slug }}
-          className="block w-full rounded-md bg-primary text-primary-foreground py-3 px-4 text-center text-base font-medium hover:bg-primary/90 transition-colors"
-        >
-          🚀 Začít hru
-        </Link>
+        <SignedIn>
+          <Link
+            to="/game/$gameSlug"
+            params={{ gameSlug: game.slug }}
+            className="block w-full rounded-md bg-primary text-primary-foreground py-3 px-4 text-center text-base font-medium hover:bg-primary/90 transition-colors"
+          >
+            🚀 Začít hru
+          </Link>
+        </SignedIn>
+        <SignedOut>
+          <div className="space-y-2">
+            <p className="text-sm text-muted-foreground text-center">Pro spusteni hry se prosim prihlas.</p>
+            <SignInButton mode="modal">
+              <button
+                type="button"
+                className="w-full rounded-md border border-border py-3 px-4 text-center text-base font-medium text-foreground hover:bg-muted/50 transition-colors"
+              >
+                Prihlasit a pokracovat
+              </button>
+            </SignInButton>
+          </div>
+        </SignedOut>
       </div>
     </div>
   )

@@ -1,0 +1,18 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "prahra-api",
+  "compatibility_date": "2025-09-02",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "src/index.ts",
+  "routes": [
+    { "pattern": "prahra.cz/api/*", "zone_name": "prahra.cz" },
+    { "pattern": "www.prahra.cz/api/*", "zone_name": "prahra.cz" }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "prahra-db",
+      "database_id": "YOUR_D1_DATABASE_ID"
+    }
+  ]
+}
