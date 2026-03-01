@@ -3,6 +3,7 @@ import type { QueryClient } from "@tanstack/react-query"
 import { createRootRouteWithContext, HeadContent, Scripts, useRouterState } from "@tanstack/react-router"
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools"
 import Header from "../components/Header"
+import { useOnlineStatus } from "../hooks/useOnlineStatus"
 import { useServiceWorkerUpdate } from "../hooks/useServiceWorkerUpdate"
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools"
 import appCss from "../styles.css?url"
@@ -60,6 +61,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname })
   const isGameRoute = pathname.startsWith("/game/")
   const { updateAvailable, refresh } = useServiceWorkerUpdate()
+  const isOnline = useOnlineStatus()
 
   return (
     <html lang="cs" className="dark">
@@ -82,6 +84,13 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           ]}
         />
         <Scripts />
+        {!isOnline && (
+          <div className="fixed top-3 inset-x-4 z-50 flex justify-center">
+            <div className="max-w-md w-full rounded-xl border border-border bg-card/95 backdrop-blur px-4 py-2 shadow-lg text-sm text-foreground text-center">
+              Jsi offline. Hra bezi v offline rezimu.
+            </div>
+          </div>
+        )}
         {updateAvailable && (
           <div className="fixed bottom-4 inset-x-4 z-50 flex justify-center">
             <div className="max-w-md w-full rounded-xl border border-border bg-card/95 backdrop-blur px-4 py-3 shadow-lg flex items-center justify-between gap-3">

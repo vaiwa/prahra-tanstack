@@ -76,18 +76,36 @@ Cíl: **Aplikace běží na prahra.cz, funguje jako PWA, testovatelná na mobilu
 - [x] **5.4** GitHub Actions CI/CD — biome check → tsc → unit testy → build → deploy na CF Workers
 - [x] **5.5** Vitest config + unit testy (19 testů: geo.ts, validate-answer.ts)
 - [x] **5.6** `wrangler.jsonc` name → `"prahra"`, `typecheck` script v package.json
-- [ ] **5.7** Deploy na Cloudflare Workers — `npm run deploy`, ověřit na `prahra.workers.dev`
-- [ ] **5.8** Nastavit doménu `www.prahra.cz` → Cloudflare custom domain
+- [x] **5.7** Deploy na Cloudflare Workers — `npm run deploy`, ověřit na `prahra.workers.dev`
+- [x] **5.8** Nastavit doménu `www.prahra.cz` → Cloudflare custom domain
 - [ ] **5.9** Otestovat na reálném mobilu (GPS, wake lock, PWA install prompt)
 - [ ] **5.10** Nastavit GitHub secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`
+
+#### Zitra otestovat (mobil)
+
+- [ ] Otevrit `www.prahra.cz` na Android (Chrome) a iOS (Safari)
+- [ ] GPS povoleni, prvni fix, presnost se postupne zlepsi
+- [ ] Odemknuti levelu: prijdu na GPS, puzzle se zobrazi a po vzdaleni zustava
+- [ ] Wake lock: obrazovka neuspava behem hry
+- [ ] PWA instalace: Install tlacitko (Android) + pridani na plochu (iOS share)
+- [ ] Offline fallback: zapnout letovy rezim a overit offline obrazovku
+- [ ] Offline banner: objevi se pri vypnutem internetu
+- [ ] SW update toast: po update se ukaze a po kliknuti se appka refreshne
+- [ ] GPS drift: pri stani na miste se stav nemeni prilis casto
+- [ ] Background/foreground: po navratu do appky GPS a cas pokracuji
+- [ ] Otoceni telefonu: layout zustava v poradku v portrait
+- [ ] Poloha "jen pri pouziti": appka to zvladne bez padu
+- [ ] Fallback "GPS nefunguje": puzzle jde zobrazit
+- [ ] PWA ikona a splash: po instalaci se zobrazi spravne
+- [ ] Feature flag: `VITE_FEATURE_DEBUG_MODE` funguje jen v dev
 
 ### Fáze 6: Service Worker & Offline
 
 Cíl: **Hra funguje i bez signálu (les, metro, tunel).**
 
-- [ ] **6.1** Přidat `vite-plugin-pwa` nebo vlastní SW s Workbox
+- [x] **6.1** Přidat `vite-plugin-pwa` nebo vlastní SW s Workbox (vlastní SW)
 - [ ] **6.2** Precache: herní assets, map tiles pro oblast hry, game data
-- [ ] **6.3** Offline detection banner — "Jsi offline, hra běží v offline režimu"
+- [x] **6.3** Offline detection banner — "Jsi offline, hra běží v offline režimu"
 - [ ] **6.4** Sync výsledků po obnovení spojení
 
 ### Fáze 7: Herní vylepšení
@@ -158,5 +176,7 @@ Klíč: `prahra_${gameSlug}_state` → JSON s aktuálním levelem, časem, skór
 
 ### PWA
 
-- `public/manifest.json` — branded "Prahra", standalone, portrait, dark theme (#0f172a)
+- `public/manifest.json` — branded "Prahra", standalone, portrait, theme/background #2b1d0e
+- Install prompt tlačítko na homepage + update toast při nové SW verzi
+- Vlastní service worker + offline fallback
 - Ikony: `favicon.ico`, `logo192.png`, `logo512.png` (zatím výchozí, potřeba vlastní)

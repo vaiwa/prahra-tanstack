@@ -25,7 +25,7 @@ export function GameComplete({ game, state, getElapsedTimeSec, getTotalTimeSec, 
   const maxScore = game.levels.reduce((sum, l) => sum + l.points, 0)
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-card to-background flex items-center justify-center p-4">
+    <div className="min-h-screen bg-linear-to-b from-background via-card to-background flex items-center justify-center p-4">
       <div className="max-w-md w-full text-center space-y-6">
         {/* Celebration */}
         <div className="text-6xl mb-4">🎉</div>
@@ -76,6 +76,27 @@ export function GameComplete({ game, state, getElapsedTimeSec, getTotalTimeSec, 
                 </div>
               )
             })}
+          </div>
+        </div>
+
+        {/* Bonus media */}
+        <div className="rounded-lg border border-border bg-card overflow-hidden text-left">
+          <img
+            src="/never-gonna-give-you-up.jpg"
+            alt="Never Gonna Give You Up - thumbnail"
+            className="w-full h-auto"
+            loading="lazy"
+          />
+          <div className="p-4">
+            <p className="text-sm text-muted-foreground mb-2">Bonus video</p>
+            <a
+              href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+              target="_blank"
+              rel="noreferrer"
+              className="text-sm font-medium text-primary hover:text-primary/80"
+            >
+              Never Gonna Give You Up
+            </a>
           </div>
         </div>
 

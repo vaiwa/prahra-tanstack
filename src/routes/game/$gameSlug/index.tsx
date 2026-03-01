@@ -11,6 +11,7 @@ import { getGameBySlug } from "@/data/games"
 import { useGameState } from "@/hooks/useGameState"
 import { useGeolocation } from "@/hooks/useGeolocation"
 import { useWakeLock } from "@/hooks/useWakeLock"
+import { featureFlags } from "@/lib/featureFlags"
 import { haversineDistance } from "@/lib/geo"
 
 // Lazy load the map (Leaflet is heavy)
@@ -152,16 +153,18 @@ function GameEngine({ gameSlug }: { gameSlug: string }) {
           <ArrowLeft size={16} />
           {game.name}
         </Link>
-        <button
-          type="button"
-          onClick={() => setDebugMode((d) => !d)}
-          className={`p-2 rounded-lg transition-colors ${
-            debugMode ? "bg-orange-500/20 text-orange-400" : "text-muted-foreground hover:text-foreground"
-          }`}
-          title="Debug mode"
-        >
-          <Bug size={18} />
-        </button>
+        {featureFlags.debugMode && (
+          <button
+            type="button"
+            onClick={() => setDebugMode((d) => !d)}
+            className={`p-2 rounded-lg transition-colors ${
+              debugMode ? "bg-orange-500/20 text-orange-400" : "text-muted-foreground hover:text-foreground"
+            }`}
+            title="Debug mode"
+          >
+            <Bug size={18} />
+          </button>
+        )}
       </div>
 
       <div className="max-w-md mx-auto px-4 pb-8 space-y-4">
@@ -237,7 +240,7 @@ function GameEngine({ gameSlug }: { gameSlug: string }) {
         )}
 
         {/* Debug Panel */}
-        {debugMode && (
+        {featureFlags.debugMode && debugMode && (
           <DebugPanel
             position={geo.position}
             accuracy={geo.accuracy}
