@@ -17,9 +17,7 @@ function GameIntro() {
         <div className="text-center space-y-4">
           <p className="text-4xl">🔍</p>
           <h1 className="text-xl font-bold text-foreground">Hra nenalezena</h1>
-          <p className="text-muted-foreground">
-            Hra &quot;{gameSlug}&quot; neexistuje.
-          </p>
+          <p className="text-muted-foreground">Hra &quot;{gameSlug}&quot; neexistuje.</p>
           <Link
             to="/"
             className="inline-block rounded-md bg-primary text-primary-foreground py-2 px-4 text-sm font-medium hover:bg-primary/90"
@@ -40,9 +38,7 @@ function GameIntroContent({ game }: { game: Game }) {
       // biome-ignore lint/suspicious/noArrayIndexKey: static list of 5 stars
       key={i}
       size={16}
-      className={
-        i < game.difficulty ? "text-yellow-400 fill-yellow-400" : "text-muted"
-      }
+      className={i < game.difficulty ? "text-yellow-400 fill-yellow-400" : "text-muted"}
     />
   ))
 
@@ -71,9 +67,7 @@ function GameIntroContent({ game }: { game: Game }) {
           <div className="rounded-lg border border-border bg-card p-3 flex items-center gap-2">
             <Clock size={18} className="text-muted-foreground" />
             <div>
-              <p className="text-sm font-medium text-foreground">
-                ~{game.estimatedDurationMin} min
-              </p>
+              <p className="text-sm font-medium text-foreground">~{game.estimatedDurationMin} min</p>
               <p className="text-xs text-muted-foreground">Délka</p>
             </div>
           </div>
@@ -81,9 +75,7 @@ function GameIntroContent({ game }: { game: Game }) {
           <div className="rounded-lg border border-border bg-card p-3 flex items-center gap-2">
             <MapPin size={18} className="text-muted-foreground" />
             <div>
-              <p className="text-sm font-medium text-foreground">
-                {game.levels.length} míst
-              </p>
+              <p className="text-sm font-medium text-foreground">{game.levels.length} míst</p>
               <p className="text-xs text-muted-foreground">Zastávky</p>
             </div>
           </div>
@@ -96,9 +88,7 @@ function GameIntroContent({ game }: { game: Game }) {
             <Users size={18} className="text-muted-foreground" />
             <div>
               <p className="text-sm font-medium text-foreground">
-                {game.maxTeamSize === 1
-                  ? "Solo"
-                  : `1–${game.maxTeamSize} hráčů`}
+                {game.maxTeamSize === 1 ? "Solo" : `1–${game.maxTeamSize} hráčů`}
               </p>
               <p className="text-xs text-muted-foreground">Tým</p>
             </div>
@@ -107,23 +97,16 @@ function GameIntroContent({ game }: { game: Game }) {
 
         {/* Description */}
         <div className="rounded-lg border border-border bg-card p-4">
-          <p className="text-sm text-foreground leading-relaxed">
-            {game.description}
-          </p>
+          <p className="text-sm text-foreground leading-relaxed">{game.description}</p>
         </div>
 
         {/* Required items */}
         {game.requiredItems.length > 0 && (
           <div className="rounded-lg border border-border bg-card p-4">
-            <h3 className="text-sm font-medium text-muted-foreground mb-2">
-              🎒 Co si vzít s sebou
-            </h3>
+            <h3 className="text-sm font-medium text-muted-foreground mb-2">🎒 Co si vzít s sebou</h3>
             <ul className="space-y-1">
               {game.requiredItems.map((item) => (
-                <li
-                  key={item}
-                  className="text-sm text-foreground flex items-center gap-2"
-                >
+                <li key={item} className="text-sm text-foreground flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-primary" />
                   {item}
                 </li>
@@ -134,15 +117,10 @@ function GameIntroContent({ game }: { game: Game }) {
 
         {/* Start location */}
         <div className="rounded-lg border border-border bg-card p-4">
-          <h3 className="text-sm font-medium text-muted-foreground mb-1">
-            📍 Start
-          </h3>
-          <p className="text-sm text-foreground">
-            {game.startLocation.label ?? "Neznámá lokace"}
-          </p>
+          <h3 className="text-sm font-medium text-muted-foreground mb-1">📍 Start</h3>
+          <p className="text-sm text-foreground">{game.startLocation.label ?? "Neznámá lokace"}</p>
           <p className="text-xs text-muted-foreground mt-1">
-            {game.startLocation.lat.toFixed(5)},{" "}
-            {game.startLocation.lng.toFixed(5)}
+            {game.startLocation.lat.toFixed(5)}, {game.startLocation.lng.toFixed(5)}
           </p>
         </div>
 

@@ -40,23 +40,11 @@ describe("validateAnswer", () => {
 
   describe("multi-choice", () => {
     it("first option is correct", () => {
-      expect(
-        validateAnswer(
-          "Correct",
-          ["Correct", "Wrong1", "Wrong2"],
-          "multi-choice",
-        ),
-      ).toBe(true)
+      expect(validateAnswer("Correct", ["Correct", "Wrong1", "Wrong2"], "multi-choice")).toBe(true)
     })
 
     it("other options are wrong", () => {
-      expect(
-        validateAnswer(
-          "Wrong1",
-          ["Correct", "Wrong1", "Wrong2"],
-          "multi-choice",
-        ),
-      ).toBe(false)
+      expect(validateAnswer("Wrong1", ["Correct", "Wrong1", "Wrong2"], "multi-choice")).toBe(false)
     })
   })
 

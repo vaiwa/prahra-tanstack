@@ -60,7 +60,7 @@ function GameEngine({ gameSlug }: { gameSlug: string }) {
   const wakeLock = useWakeLock()
   const gameState = useGameState(game)
 
-  const { state, currentLevel, revealHint, completeLevel, resetGame } = gameState
+  const { state, currentLevel, revealHint, completeLevel, unlockLevel, resetGame } = gameState
 
   // Start tracking GPS and wake lock on mount
   // biome-ignore lint/correctness/useExhaustiveDependencies: intentional mount-only effect
@@ -86,6 +86,17 @@ function GameEngine({ gameSlug }: { gameSlug: string }) {
     if (distanceToTarget === null || !currentLevel) return false
     return distanceToTarget <= currentLevel.unlockRadius
   }, [distanceToTarget, currentLevel])
+
+  const isUnlocked = useMemo(() => {
+    if (!currentLevel) return false
+    return Boolean(state.unlockedLevels[currentLevel.id])
+  }, [currentLevel, state.unlockedLevels])
+
+  useEffect(() => {
+    if (currentLevel && isInRange) {
+      unlockLevel(currentLevel.id)
+    }
+  }, [currentLevel, isInRange, unlockLevel])
 
   // Handle correct answer
   const handleCorrectAnswer = () => {
@@ -120,7 +131,7 @@ function GameEngine({ gameSlug }: { gameSlug: string }) {
   // Solved message overlay
   if (solvedMessage) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-background via-card to-background flex items-center justify-center p-4">
+      <div className="min-h-screen bg-linear-to-b from-background via-card to-background flex items-center justify-center p-4">
         <div className="max-w-md w-full text-center space-y-4 animate-in fade-in">
           <p className="text-5xl">🎯</p>
           <p className="text-lg text-foreground leading-relaxed whitespace-pre-line">{solvedMessage}</p>
@@ -130,7 +141,7 @@ function GameEngine({ gameSlug }: { gameSlug: string }) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-card to-background">
+    <div className="min-h-screen bg-linear-to-b from-background via-card to-background">
       {/* Header */}
       <div className="p-4 flex items-center justify-between">
         <Link
@@ -197,7 +208,7 @@ function GameEngine({ gameSlug }: { gameSlug: string }) {
         )}
 
         {/* Puzzle card — shows when in range, no GPS, or forced */}
-        {currentLevel && (isInRange || !geo.position || forceShowPuzzle) && (
+        {currentLevel && (isInRange || isUnlocked || !geo.position || forceShowPuzzle) && (
           <PuzzleCard
             level={currentLevel}
             revealedHintIndices={state.revealedHints[currentLevel.id] ?? []}
@@ -207,7 +218,7 @@ function GameEngine({ gameSlug }: { gameSlug: string }) {
         )}
 
         {/* Waiting state — not in range yet */}
-        {currentLevel && !isInRange && geo.position && !forceShowPuzzle && (
+        {currentLevel && !isInRange && !isUnlocked && geo.position && !forceShowPuzzle && (
           <div className="rounded-lg border border-border bg-card p-4 text-center space-y-2">
             <h2 className="text-lg font-bold text-foreground">
               {currentLevel.order}. {currentLevel.name}

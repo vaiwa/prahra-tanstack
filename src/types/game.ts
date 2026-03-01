@@ -104,6 +104,8 @@ export interface GameState {
   penaltyTimeSec: number
   /** Which hints have been revealed: levelId -> hint indices */
   revealedHints: Record<string, number[]>
+  /** Levels unlocked by visiting GPS: levelId -> timestamp */
+  unlockedLevels: Record<string, string>
   /** Timestamps when each level was completed */
   completedLevels: Record<string, string>
   /** Is the game finished? */

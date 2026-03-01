@@ -35,8 +35,17 @@ function createInitialState(gameSlug: string): GameState {
     score: 0,
     penaltyTimeSec: 0,
     revealedHints: {},
+    unlockedLevels: {},
     completedLevels: {},
     isComplete: false,
+  }
+}
+
+function normalizeState(saved: GameState): GameState {
+  return {
+    ...createInitialState(saved.gameSlug),
+    ...saved,
+    unlockedLevels: saved.unlockedLevels ?? {},
   }
 }
 
@@ -46,7 +55,7 @@ function createInitialState(gameSlug: string): GameState {
 export function useGameState(game: Game) {
   const [state, setState] = useState<GameState>(() => {
     const saved = loadState(game.slug)
-    if (saved && !saved.isComplete) return saved
+    if (saved && !saved.isComplete) return normalizeState(saved)
     return createInitialState(game.slug)
   })
 
@@ -105,6 +114,20 @@ export function useGameState(game: Game) {
     [game.levels],
   )
 
+  /** Mark a level as GPS-unlocked */
+  const unlockLevel = useCallback((levelId: string) => {
+    setState((prev) => {
+      if (prev.unlockedLevels[levelId]) return prev
+      return {
+        ...prev,
+        unlockedLevels: {
+          ...prev.unlockedLevels,
+          [levelId]: new Date().toISOString(),
+        },
+      }
+    })
+  }, [])
+
   /** Reset the game to start over */
   const resetGame = useCallback(() => {
     const fresh = createInitialState(game.slug)
@@ -121,7 +144,7 @@ export function useGameState(game: Game) {
   /** Continue a previously saved game */
   const continueSavedGame = useCallback(() => {
     const saved = loadState(game.slug)
-    if (saved) setState(saved)
+    if (saved) setState(normalizeState(saved))
   }, [game.slug])
 
   /** Get elapsed time in seconds (without penalty) */
@@ -141,6 +164,7 @@ export function useGameState(game: Game) {
     currentLevel,
     revealHint,
     completeLevel,
+    unlockLevel,
     resetGame,
     hasSavedGame,
     continueSavedGame,

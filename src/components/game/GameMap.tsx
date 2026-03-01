@@ -5,14 +5,7 @@ import type { GpsLocation } from "@/types/game"
 import "leaflet/dist/leaflet.css"
 
 import L from "leaflet"
-import {
-  Circle,
-  MapContainer,
-  Marker,
-  Popup,
-  TileLayer,
-  useMap,
-} from "react-leaflet"
+import { Circle, MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet"
 
 // Fix default marker icons — bundled locally instead of unpkg CDN
 const defaultIcon = L.icon({
@@ -65,13 +58,7 @@ interface GameMapProps {
   showTarget?: boolean
 }
 
-export function GameMap({
-  playerPosition,
-  targetPosition,
-  unlockRadius,
-  accuracy,
-  showTarget = true,
-}: GameMapProps) {
+export function GameMap({ playerPosition, targetPosition, unlockRadius, accuracy, showTarget = true }: GameMapProps) {
   const center = playerPosition ?? targetPosition
 
   return (
@@ -88,18 +75,10 @@ export function GameMap({
         {/* Player position */}
         {playerPosition && (
           <>
-            <Marker
-              position={[playerPosition.lat, playerPosition.lng]}
-              icon={playerIcon}
-            >
+            <Marker position={[playerPosition.lat, playerPosition.lng]} icon={playerIcon}>
               <Popup>
                 Tvoje pozice
-                {accuracy && (
-                  <span className="text-xs text-muted-foreground">
-                    {" "}
-                    (±{Math.round(accuracy)}m)
-                  </span>
-                )}
+                {accuracy && <span className="text-xs text-muted-foreground"> (±{Math.round(accuracy)}m)</span>}
               </Popup>
             </Marker>
 
@@ -124,10 +103,7 @@ export function GameMap({
         {/* Target position */}
         {showTarget && (
           <>
-            <Marker
-              position={[targetPosition.lat, targetPosition.lng]}
-              icon={defaultIcon}
-            >
+            <Marker position={[targetPosition.lat, targetPosition.lng]} icon={defaultIcon}>
               <Popup>{targetPosition.label ?? "Cíl"}</Popup>
             </Marker>
 

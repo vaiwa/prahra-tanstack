@@ -12,10 +12,7 @@ interface DistanceIndicatorProps {
  * - Yellow: 50-100m
  * - Green: < 50m (close to unlock)
  */
-export function DistanceIndicator({
-  distanceMeters,
-  unlockRadius,
-}: DistanceIndicatorProps) {
+export function DistanceIndicator({ distanceMeters, unlockRadius }: DistanceIndicatorProps) {
   const isInRange = distanceMeters <= unlockRadius
   const formatted = formatDistance(distanceMeters)
 
@@ -46,20 +43,14 @@ export function DistanceIndicator({
   }
 
   return (
-    <div
-      className={`flex items-center justify-between rounded-lg border p-4 ${bgClass}`}
-    >
+    <div className={`flex items-center justify-between rounded-lg border p-4 ${bgClass}`}>
       <div>
-        <p className={`text-2xl font-bold tabular-nums ${colorClass}`}>
-          {formatted}
-        </p>
+        <p className={`text-2xl font-bold tabular-nums ${colorClass}`}>{formatted}</p>
         <p className="text-sm text-muted-foreground">{label}</p>
       </div>
       {!isInRange && (
         <div className="text-right">
-          <p className="text-xs text-muted-foreground">
-            Přiblíž se na {unlockRadius}m
-          </p>
+          <p className="text-xs text-muted-foreground">Přiblíž se na {unlockRadius}m</p>
         </div>
       )}
     </div>

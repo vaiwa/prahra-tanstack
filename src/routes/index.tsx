@@ -17,11 +17,11 @@ function HomePage() {
         <div className="relative max-w-md mx-auto">
           <h1 className="text-4xl font-black text-primary mb-2">Prahra</h1>
           <p className="text-lg text-muted-foreground">
-            Venkovní puzzle hry v Praze. Žádná instalace — stačí mobil a chuť
-            objevovat.
+            Venkovní puzzle hry v Praze. Žádná instalace — stačí mobil a chuť objevovat.
           </p>
           {canInstall && (
             <button
+              type="button"
               onClick={install}
               className="mt-6 px-6 py-2 rounded-full bg-primary text-primary-foreground font-semibold shadow hover:bg-primary/90 transition-all border border-border"
             >
@@ -33,9 +33,7 @@ function HomePage() {
 
       {/* Game list */}
       <section className="px-4 pb-12 max-w-md mx-auto">
-        <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-4">
-          Dostupné hry
-        </h2>
+        <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-4">Dostupné hry</h2>
 
         {games.length === 0 ? (
           <div className="rounded-lg border border-border bg-card p-8 text-center">
@@ -52,17 +50,11 @@ function HomePage() {
               >
                 <div className="p-4 space-y-3">
                   <div>
-                    <h3 className="text-lg font-bold text-foreground">
-                      {game.name}
-                    </h3>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      {game.author}
-                    </p>
+                    <h3 className="text-lg font-bold text-foreground">{game.name}</h3>
+                    <p className="text-sm text-muted-foreground mt-1">{game.author}</p>
                   </div>
 
-                  <p className="text-sm text-muted-foreground line-clamp-2">
-                    {game.description}
-                  </p>
+                  <p className="text-sm text-muted-foreground line-clamp-2">{game.description}</p>
 
                   <div className="flex items-center gap-4 text-xs text-muted-foreground">
                     <span className="flex items-center gap-1">
@@ -78,9 +70,7 @@ function HomePage() {
                     </span>
                     <span className="flex items-center gap-1">
                       <Users size={12} />
-                      {game.maxTeamSize === 1
-                        ? "Solo"
-                        : `1–${game.maxTeamSize}`}
+                      {game.maxTeamSize === 1 ? "Solo" : `1–${game.maxTeamSize}`}
                     </span>
                   </div>
                 </div>

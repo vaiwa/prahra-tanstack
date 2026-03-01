@@ -23,16 +23,10 @@ export function useServiceWorkerUpdate() {
       },
     })
 
-    navigator.serviceWorker?.addEventListener(
-      "controllerchange",
-      onControllerChange
-    )
+    navigator.serviceWorker?.addEventListener("controllerchange", onControllerChange)
 
     return () => {
-      navigator.serviceWorker?.removeEventListener(
-        "controllerchange",
-        onControllerChange
-      )
+      navigator.serviceWorker?.removeEventListener("controllerchange", onControllerChange)
     }
   }, [])
 

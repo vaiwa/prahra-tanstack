@@ -14,9 +14,7 @@ export function haversineDistance(a: GpsLocation, b: GpsLocation): number {
   const sinDLat = Math.sin(dLat / 2)
   const sinDLng = Math.sin(dLng / 2)
 
-  const h =
-    sinDLat * sinDLat +
-    Math.cos(toRad(a.lat)) * Math.cos(toRad(b.lat)) * sinDLng * sinDLng
+  const h = sinDLat * sinDLat + Math.cos(toRad(a.lat)) * Math.cos(toRad(b.lat)) * sinDLng * sinDLng
 
   return 2 * R * Math.asin(Math.sqrt(h))
 }
@@ -45,9 +43,7 @@ export function calculateBearing(from: GpsLocation, to: GpsLocation): number {
   const toLat = toRad(to.lat)
 
   const y = Math.sin(dLng) * Math.cos(toLat)
-  const x =
-    Math.cos(fromLat) * Math.sin(toLat) -
-    Math.sin(fromLat) * Math.cos(toLat) * Math.cos(dLng)
+  const x = Math.cos(fromLat) * Math.sin(toLat) - Math.sin(fromLat) * Math.cos(toLat) * Math.cos(dLng)
 
   return (toDeg(Math.atan2(y, x)) + 360) % 360
 }

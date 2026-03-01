@@ -51,25 +51,16 @@ export function PuzzleCard({
       {/* Level title */}
       <div>
         <h2 className="text-lg font-bold text-foreground">{level.name}</h2>
-        <p className="text-sm text-muted-foreground whitespace-pre-line mt-2">
-          {level.description}
-        </p>
+        <p className="text-sm text-muted-foreground whitespace-pre-line mt-2">{level.description}</p>
       </div>
 
       {/* Revealed hints */}
       {revealedHintIndices.length > 0 && (
         <div className="space-y-2">
           {revealedHintIndices.map((hintIdx) => (
-            <div
-              key={hintIdx}
-              className="rounded-md bg-yellow-500/10 border border-yellow-500/30 p-3"
-            >
-              <p className="text-xs font-medium text-yellow-400 mb-1">
-                💡 Nápověda {hintIdx + 1}
-              </p>
-              <p className="text-sm text-foreground">
-                {level.hints[hintIdx].text}
-              </p>
+            <div key={hintIdx} className="rounded-md bg-yellow-500/10 border border-yellow-500/30 p-3">
+              <p className="text-xs font-medium text-yellow-400 mb-1">💡 Nápověda {hintIdx + 1}</p>
+              <p className="text-sm text-foreground">{level.hints[hintIdx].text}</p>
             </div>
           ))}
         </div>
@@ -78,8 +69,7 @@ export function PuzzleCard({
       {/* Answer input (for non-'none' types) */}
       {level.answerType !== "none" ? (
         <form onSubmit={handleSubmit} className="space-y-3">
-          {level.answerType === "multi-choice" &&
-          Array.isArray(level.answer) ? (
+          {level.answerType === "multi-choice" && Array.isArray(level.answer) ? (
             <div className="space-y-2">
               {level.answer.map((option, i) => (
                 <button
@@ -88,11 +78,7 @@ export function PuzzleCard({
                   type="button"
                   onClick={() => {
                     setAnswer(option)
-                    const isCorrect = validateAnswer(
-                      option,
-                      level.answer,
-                      level.answerType,
-                    )
+                    const isCorrect = validateAnswer(option, level.answer, level.answerType)
                     if (isCorrect) {
                       setFeedback("correct")
                       setTimeout(() => onCorrectAnswer(), 800)
@@ -161,10 +147,7 @@ export function PuzzleCard({
           (showHintConfirm === nextHintIndex ? (
             <div className="flex-1 rounded-md bg-yellow-500/10 border border-yellow-500/30 p-3 space-y-2">
               <p className="text-sm text-yellow-400">
-                Zobrazit nápovědu? Penalizace:{" "}
-                <strong>
-                  +{Math.round((nextHint?.penaltySec ?? 0) / 60)} min
-                </strong>
+                Zobrazit nápovědu? Penalizace: <strong>+{Math.round((nextHint?.penaltySec ?? 0) / 60)} min</strong>
               </p>
               <div className="flex gap-2">
                 <button
@@ -189,8 +172,7 @@ export function PuzzleCard({
               onClick={() => setShowHintConfirm(nextHintIndex)}
               className="flex-1 rounded-md border border-yellow-500/30 text-yellow-400 py-2 px-4 text-sm hover:bg-yellow-500/10 transition-colors"
             >
-              💡 Nápověda ({revealedHintIndices.length + 1}/{level.hints.length}
-              )
+              💡 Nápověda ({revealedHintIndices.length + 1}/{level.hints.length})
             </button>
           ))}
         {/* Manual unlock (GPS fallback) */}

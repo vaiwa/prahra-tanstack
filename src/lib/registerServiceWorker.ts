@@ -15,10 +15,7 @@ export function registerServiceWorker(callbacks: RegisterCallbacks = {}) {
             }
 
             newWorker.addEventListener("statechange", () => {
-              if (
-                newWorker.state === "installed" &&
-                navigator.serviceWorker.controller
-              ) {
+              if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
                 callbacks.onUpdate?.(registration)
               }
             })

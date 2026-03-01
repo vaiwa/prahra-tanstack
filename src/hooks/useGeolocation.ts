@@ -28,11 +28,7 @@ interface UseGeolocationOptions {
  * Supports a "fake position" override for debug/testing.
  */
 export function useGeolocation(options: UseGeolocationOptions = {}) {
-  const {
-    enableHighAccuracy = true,
-    maximumAge = 5000,
-    timeout = 15000,
-  } = options
+  const { enableHighAccuracy = true, maximumAge = 5000, timeout = 15000 } = options
 
   const [state, setState] = useState<GeolocationState>({
     position: null,
@@ -73,8 +69,7 @@ export function useGeolocation(options: UseGeolocationOptions = {}) {
         let errorMessage: string
         switch (err.code) {
           case err.PERMISSION_DENIED:
-            errorMessage =
-              "Přístup k poloze byl zamítnut. Povol GPS v nastavení prohlížeče."
+            errorMessage = "Přístup k poloze byl zamítnut. Povol GPS v nastavení prohlížeče."
             break
           case err.POSITION_UNAVAILABLE:
             errorMessage = "Poloha není dostupná. Zkus to venku."

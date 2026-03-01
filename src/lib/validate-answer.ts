@@ -4,27 +4,19 @@ import type { AnswerType } from "@/types/game"
  * Validate a player's answer against the correct answer.
  * Returns true if the answer is correct.
  */
-export function validateAnswer(
-  input: string,
-  correctAnswer: string | string[],
-  answerType: AnswerType,
-): boolean {
+export function validateAnswer(input: string, correctAnswer: string | string[], answerType: AnswerType): boolean {
   const trimmed = input.trim()
 
   switch (answerType) {
     case "exact": {
       if (Array.isArray(correctAnswer)) {
-        return correctAnswer.some(
-          (a) => a.toLowerCase() === trimmed.toLowerCase(),
-        )
+        return correctAnswer.some((a) => a.toLowerCase() === trimmed.toLowerCase())
       }
       return correctAnswer.toLowerCase() === trimmed.toLowerCase()
     }
 
     case "regex": {
-      const pattern = Array.isArray(correctAnswer)
-        ? correctAnswer[0]
-        : correctAnswer
+      const pattern = Array.isArray(correctAnswer) ? correctAnswer[0] : correctAnswer
       try {
         const regex = new RegExp(pattern, "i")
         return regex.test(trimmed)
@@ -44,9 +36,7 @@ export function validateAnswer(
 
     case "qr-code": {
       // QR code value must match exactly
-      const expected = Array.isArray(correctAnswer)
-        ? correctAnswer[0]
-        : correctAnswer
+      const expected = Array.isArray(correctAnswer) ? correctAnswer[0] : correctAnswer
       return expected === trimmed
     }
 

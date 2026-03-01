@@ -17,11 +17,7 @@ function formatTime(seconds: number): string {
   return `${m}:${String(s).padStart(2, "0")}`
 }
 
-export function GameProgress({
-  state,
-  totalLevels,
-  getElapsedTimeSec,
-}: GameProgressProps) {
+export function GameProgress({ state, totalLevels, getElapsedTimeSec }: GameProgressProps) {
   const [elapsed, setElapsed] = useState(getElapsedTimeSec())
 
   // Update timer every second
@@ -47,9 +43,7 @@ export function GameProgress({
           </span>
           <span className="text-muted-foreground">⏱️ {formatTime(elapsed)}</span>
           {state.penaltyTimeSec > 0 && (
-            <span className="text-yellow-400 text-xs">
-              (+{formatTime(state.penaltyTimeSec)})
-            </span>
+            <span className="text-yellow-400 text-xs">(+{formatTime(state.penaltyTimeSec)})</span>
           )}
         </div>
         <span className="font-medium text-foreground">{state.score} bodů</span>

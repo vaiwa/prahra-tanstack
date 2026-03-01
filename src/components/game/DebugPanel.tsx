@@ -26,13 +26,9 @@ export function DebugPanel({
   return (
     <div className="rounded-lg border border-orange-500/30 bg-orange-500/5 p-3 space-y-3">
       <div className="flex items-center justify-between">
-        <h3 className="text-xs font-bold text-orange-400 uppercase tracking-wider">
-          🔧 Debug Mode
-        </h3>
+        <h3 className="text-xs font-bold text-orange-400 uppercase tracking-wider">🔧 Debug Mode</h3>
         {isFakePosition && (
-          <span className="text-xs bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded-full">
-            FAKE GPS
-          </span>
+          <span className="text-xs bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded-full">FAKE GPS</span>
         )}
       </div>
 
@@ -40,24 +36,18 @@ export function DebugPanel({
       <div className="text-xs text-muted-foreground space-y-1 font-mono">
         <p>
           GPS: {isTracking ? "🟢 tracking" : "🔴 stopped"}
-          {position
-            ? ` [${position.lat.toFixed(5)}, ${position.lng.toFixed(5)}]`
-            : " [no position]"}
+          {position ? ` [${position.lat.toFixed(5)}, ${position.lng.toFixed(5)}]` : " [no position]"}
         </p>
         <p>Accuracy: {accuracy ? `±${Math.round(accuracy)}m` : "N/A"}</p>
         <p>
           Target: {currentLevel?.name ?? "N/A"}
-          {distanceToTarget !== null
-            ? ` (${Math.round(distanceToTarget)}m away)`
-            : ""}
+          {distanceToTarget !== null ? ` (${Math.round(distanceToTarget)}m away)` : ""}
         </p>
       </div>
 
       {/* Teleport buttons */}
       <div className="space-y-1">
-        <p className="text-xs text-orange-400 font-medium">
-          Teleport k levelu:
-        </p>
+        <p className="text-xs text-orange-400 font-medium">Teleport k levelu:</p>
         <div className="flex flex-wrap gap-1">
           {levels.map((level) => (
             <button
