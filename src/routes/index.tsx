@@ -10,7 +10,7 @@ function HomePage() {
   const { canInstall, install } = usePWAInstallPrompt()
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-background via-card to-background">
+    <div className="bg-linear-to-b from-background via-card to-background">
       {/* Hero */}
       <section className="relative py-16 px-6 text-center overflow-hidden">
         <div className="absolute inset-0 bg-linear-to-r from-primary/5 via-primary/10 to-primary/5" />

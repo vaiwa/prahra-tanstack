@@ -5,9 +5,17 @@ import viteReact from '@vitejs/plugin-react'
 import viteTsConfigPaths from 'vite-tsconfig-paths'
 import tailwindcss from '@tailwindcss/vite'
 import { cloudflare } from '@cloudflare/vite-plugin'
+import fs from 'fs'
 import path from 'path'
 
+const versionJson = JSON.parse(
+  fs.readFileSync(path.resolve(__dirname, './version.json'), 'utf8'),
+) as { version?: string }
+
 const config = defineConfig({
+  define: {
+    'import.meta.env.VITE_APP_VERSION': JSON.stringify(versionJson.version ?? '0.0.0.0'),
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

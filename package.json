@@ -17,7 +17,7 @@
     "clean": "rimraf node_modules dist",
     "clean-install": "npm run clean && npm install",
     "version:sync": "node scripts/sync-version.mjs",
-    "version:bump": "npm version patch --no-git-tag-version && npm run version:sync",
+    "version:bump": "node scripts/bump-version.mjs && npm run version:sync",
     "deploy": "run-s deploy:web deploy:api",
     "deploy:web": "npm run build && wrangler deploy",
     "dev:api": "wrangler dev --config api/wrangler.api.jsonc",

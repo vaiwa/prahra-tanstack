@@ -4,6 +4,7 @@ import { TanStackDevtools } from "@tanstack/react-devtools"
 import type { QueryClient } from "@tanstack/react-query"
 import { createRootRouteWithContext, HeadContent, Scripts, useRouterState } from "@tanstack/react-router"
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools"
+import Footer from "../components/Footer"
 import Header from "../components/Header"
 import { useOnlineStatus } from "../hooks/useOnlineStatus"
 import { useServiceWorkerUpdate } from "../hooks/useServiceWorkerUpdate"
@@ -90,6 +91,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         </div>
       )}
       {children}
+      {!isGameRoute && <Footer />}
       <TanStackDevtools
         config={{
           position: "bottom-right",
