@@ -10,9 +10,9 @@
   ],
   "d1_databases": [
     {
-      "binding": "DB",
+      "binding": "prahra_db",
       "database_name": "prahra-db",
-      "database_id": "YOUR_D1_DATABASE_ID"
+      "database_id": "1dd819b8-eeec-47ed-9177-1dbebae5f9c3"
     }
   ]
 }

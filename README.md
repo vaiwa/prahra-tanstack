@@ -29,22 +29,23 @@ Otevři http://localhost:3000
 
 ## Příkazy
 
-| Příkaz                  | Popis                                    |
-| ----------------------- | ---------------------------------------- |
-| `npm run dev`           | Spustí dev server na portu 3000          |
-| `npm run build`         | Produkční build                          |
-| `npm run preview`       | Náhled produkčního buildu                |
-| `npm test`              | Spustí unit testy                        |
-| `npm run typecheck`     | TypeScript type check                    |
-| `npm run lint`          | Biome lint                               |
-| `npm run format`        | Biome formátování                        |
-| `npm run check`         | Biome lint + format                      |
-| `npm run verify`        | Kompletní CI check (biome + tsc + testy) |
-| `npm run clean`         | Smaže node_modules + dist                |
-| `npm run clean-install` | Clean + npm install                      |
-| `npm run deploy`        | Build + deploy na Cloudflare Workers     |
-| `npm run dev:api`       | Spustí API worker lokálně (wrangler)     |
-| `npm run deploy:api`    | Deploy API worker                        |
+| Příkaz                  | Popis                                                |
+| ----------------------- | ---------------------------------------------------- |
+| `npm run dev`           | Spustí dev server na portu 3000                      |
+| `npm run build`         | Produkční build                                      |
+| `npm run preview`       | Náhled produkčního buildu                            |
+| `npm test`              | Spustí unit testy                                    |
+| `npm run typecheck`     | TypeScript type check                                |
+| `npm run lint`          | Biome lint                                           |
+| `npm run format`        | Biome formátování                                    |
+| `npm run check`         | Biome lint + format                                  |
+| `npm run verify`        | Kompletní CI check (biome + tsc + testy)             |
+| `npm run clean`         | Smaže node_modules + dist                            |
+| `npm run clean-install` | Clean + npm install                                  |
+| `npm run version:bump`  | Zvýší patch verzi a synchronizuje API version soubor |
+| `npm run deploy`        | Build + deploy na Cloudflare Workers                 |
+| `npm run dev:api`       | Spustí API worker lokálně (wrangler)                 |
+| `npm run deploy:api`    | Deploy API worker                                    |
 
 ## Struktura projektu
 
@@ -79,6 +80,12 @@ Vyžaduje GitHub secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`
 ## API worker (Clerk + D1)
 
 API běží jako samostatný Cloudflare Worker na `/api/*`.
+
+Verze API:
+
+- `GET /api/version` vrací aktuálně nasazenou verzi.
+- Hodnota se synchronizuje do `api/src/version.ts` skriptem `npm run version:sync`.
+- CI při merge do `main` automaticky provede patch bump (`version:bump`) před deployem.
 
 Nastavení:
 

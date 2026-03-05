@@ -2,9 +2,10 @@
 import { verifyToken } from "@clerk/backend"
 import { Hono } from "hono"
 import { cors } from "hono/cors"
+import { APP_VERSION } from "./version"
 
 type Bindings = {
-  DB: D1Database
+  prahra_db: D1Database
   CLERK_SECRET_KEY: string
 }
 
@@ -25,6 +26,10 @@ app.use(
 
 app.get("/api/health", (c) => {
   return c.json({ ok: true })
+})
+
+app.get("/api/version", (c) => {
+  return c.json({ version: APP_VERSION })
 })
 
 app.use("/api/*", async (c, next) => {
@@ -73,20 +78,22 @@ async function ensureUserId(db: D1Database, clerkUserId: string) {
 
 app.get("/api/me", async (c) => {
   const clerkUserId = c.get("authUserId")
-  const userId = await ensureUserId(c.env.DB, clerkUserId)
+  const userId = await ensureUserId(c.env.prahra_db, clerkUserId)
   return c.json({ userId, clerkUserId })
 })
 
 app.get("/api/progress/:gameSlug", async (c) => {
   const clerkUserId = c.get("authUserId")
-  const userId = await ensureUserId(c.env.DB, clerkUserId)
+  const userId = await ensureUserId(c.env.prahra_db, clerkUserId)
   const gameSlug = c.req.param("gameSlug")
 
-  const progress = await c.env.DB.prepare("SELECT * FROM game_progress WHERE user_id = ? AND game_slug = ?")
+  const progress = await c.env.prahra_db
+    .prepare("SELECT * FROM game_progress WHERE user_id = ? AND game_slug = ?")
     .bind(userId, gameSlug)
     .first()
 
-  const levels = await c.env.DB.prepare("SELECT * FROM level_progress WHERE user_id = ? AND game_slug = ?")
+  const levels = await c.env.prahra_db
+    .prepare("SELECT * FROM level_progress WHERE user_id = ? AND game_slug = ?")
     .bind(userId, gameSlug)
     .all()
 
@@ -95,7 +102,7 @@ app.get("/api/progress/:gameSlug", async (c) => {
 
 app.post("/api/progress/:gameSlug", async (c) => {
   const clerkUserId = c.get("authUserId")
-  const userId = await ensureUserId(c.env.DB, clerkUserId)
+  const userId = await ensureUserId(c.env.prahra_db, clerkUserId)
   const gameSlug = c.req.param("gameSlug")
   const body = await c.req.json<{
     startedAt?: string
@@ -108,10 +115,11 @@ app.post("/api/progress/:gameSlug", async (c) => {
 
   const now = new Date().toISOString()
 
-  await c.env.DB.prepare(
-    "INSERT INTO game_progress (user_id, game_slug, started_at, current_level_index, total_hints_used, total_penalty_sec, is_complete, completed_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) " +
-      "ON CONFLICT(user_id, game_slug) DO UPDATE SET started_at = excluded.started_at, current_level_index = excluded.current_level_index, total_hints_used = excluded.total_hints_used, total_penalty_sec = excluded.total_penalty_sec, is_complete = excluded.is_complete, completed_at = excluded.completed_at, updated_at = excluded.updated_at",
-  )
+  await c.env.prahra_db
+    .prepare(
+      "INSERT INTO game_progress (user_id, game_slug, started_at, current_level_index, total_hints_used, total_penalty_sec, is_complete, completed_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) " +
+        "ON CONFLICT(user_id, game_slug) DO UPDATE SET started_at = excluded.started_at, current_level_index = excluded.current_level_index, total_hints_used = excluded.total_hints_used, total_penalty_sec = excluded.total_penalty_sec, is_complete = excluded.is_complete, completed_at = excluded.completed_at, updated_at = excluded.updated_at",
+    )
     .bind(
       userId,
       gameSlug,
@@ -130,7 +138,7 @@ app.post("/api/progress/:gameSlug", async (c) => {
 
 app.post("/api/level/:gameSlug/:levelId", async (c) => {
   const clerkUserId = c.get("authUserId")
-  const userId = await ensureUserId(c.env.DB, clerkUserId)
+  const userId = await ensureUserId(c.env.prahra_db, clerkUserId)
   const gameSlug = c.req.param("gameSlug")
   const levelId = c.req.param("levelId")
   const body = await c.req.json<{
@@ -142,10 +150,11 @@ app.post("/api/level/:gameSlug/:levelId", async (c) => {
 
   const now = new Date().toISOString()
 
-  await c.env.DB.prepare(
-    "INSERT INTO level_progress (user_id, game_slug, level_id, started_at, completed_at, hints_used, penalty_sec, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?) " +
-      "ON CONFLICT(user_id, game_slug, level_id) DO UPDATE SET started_at = excluded.started_at, completed_at = excluded.completed_at, hints_used = excluded.hints_used, penalty_sec = excluded.penalty_sec, updated_at = excluded.updated_at",
-  )
+  await c.env.prahra_db
+    .prepare(
+      "INSERT INTO level_progress (user_id, game_slug, level_id, started_at, completed_at, hints_used, penalty_sec, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?) " +
+        "ON CONFLICT(user_id, game_slug, level_id) DO UPDATE SET started_at = excluded.started_at, completed_at = excluded.completed_at, hints_used = excluded.hints_used, penalty_sec = excluded.penalty_sec, updated_at = excluded.updated_at",
+    )
     .bind(
       userId,
       gameSlug,

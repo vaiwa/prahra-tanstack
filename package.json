@@ -1,9 +1,11 @@
 {
   "name": "prahra-tanstack",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite dev --port 3000",
+    "dev": "run-p dev:web dev:api",
+    "dev:web": "vite dev --port 3000",
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
@@ -14,7 +16,10 @@
     "verify": "run-s check typecheck test",
     "clean": "rimraf node_modules dist",
     "clean-install": "npm run clean && npm install",
-    "deploy": "npm run build && wrangler deploy",
+    "version:sync": "node scripts/sync-version.mjs",
+    "version:bump": "npm version patch --no-git-tag-version && npm run version:sync",
+    "deploy": "run-s deploy:web deploy:api",
+    "deploy:web": "npm run build && wrangler deploy",
     "dev:api": "wrangler dev --config api/wrangler.api.jsonc",
     "deploy:api": "wrangler deploy --config api/wrangler.api.jsonc"
   },

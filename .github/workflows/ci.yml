@@ -9,6 +9,7 @@ on:
 jobs:
   check:
     name: Lint, Format & Type Check
+    if: github.event_name != 'push' || !contains(github.event.head_commit.message, '[skip ci]')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -29,8 +30,9 @@ jobs:
       - name: Unit tests
         run: npm test
 
-  build:
-    name: Build
+  build_pr:
+    name: Build (PR)
+    if: github.event_name == 'pull_request'
     needs: check
     runs-on: ubuntu-latest
     steps:
@@ -46,16 +48,55 @@ jobs:
       - name: Build
         run: npm run build
 
+  version_bump:
+    name: Bump Patch Version
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, '[skip ci]')
+    needs: check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Bump patch version
+        run: npm run version:bump
+
+      - name: Commit and push bumped version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package.json package-lock.json api/src/version.ts
+          if git diff --cached --quiet; then
+            echo "No version changes to commit"
+            exit 0
+          fi
+          git commit -m "chore: bump version to ${VERSION} [skip ci]"
+          git push
+
   deploy:
     name: Deploy to Cloudflare Workers
-    needs: build
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: version_bump
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, '[skip ci]')
     runs-on: ubuntu-latest
     permissions:
       contents: read
       deployments: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
@@ -69,3 +110,4 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}

@@ -9,9 +9,12 @@
     "ignoreUnknown": false,
     "includes": [
       "**/src/**/*",
+      "**/api/src/**/*",
       "**/.vscode/**/*",
       "**/index.html",
       "**/vite.config.js",
+      "**/wrangler.jsonc",
+      "**/api/wrangler.api.jsonc",
       "!**/src/routeTree.gen.ts",
       "!**/src/styles.css"
     ]
