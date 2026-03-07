@@ -106,7 +106,7 @@ Cíl: **Hra funguje i bez signálu (les, metro, tunel).**
 - [x] **6.1** Přidat `vite-plugin-pwa` nebo vlastní SW s Workbox (vlastní SW)
 - [ ] **6.2** Precache: herní assets, map tiles pro oblast hry, game data
 - [x] **6.3** Offline detection banner — "Jsi offline, hra běží v offline režimu"
-- [ ] **6.4** Sync výsledků po obnovení spojení
+- [x] **6.4** Sync výsledků po obnovení spojení
 
 ### Fáze 6.5: Auth & Progress (Clerk + API)
 
@@ -114,7 +114,7 @@ Cíl: **Uživatel ma ucet a prubezny progres se uklada do D1.**
 
 - [x] **6.5.1** Samostatny API worker na `/api/*`
 - [x] **6.5.2** Clerk auth (Bearer token verify)
-- [ ] **6.5.3** Klientsky sync prubezneho progresu
+- [x] **6.5.3** Klientsky sync prubezneho progresu
 - [ ] **6.5.4** Migrace D1 aplikovane na produkci
 
 ### Fáze 7: Herní vylepšení
@@ -123,9 +123,9 @@ Cíl: **Bohatší herní zážitek.**
 
 - [ ] **7.1** Kompas mode — `DeviceOrientationEvent`, šipka směrem k cíli (alternativa k mapě)
 - [ ] **7.2** QR code scanner — kamera pro `answerType: 'qr-code'` levely
-- [ ] **7.3** Media rendering — obrázky, audio, video v puzzle popisu + intro
-- [ ] **7.4** Markdown rendering v popisech (lightweight parser, např. `marked` nebo `mdx`)
-- [ ] **7.5** Countdown timer pro `timeLimitSec` > 0
+- [x] **7.3** Media rendering — obrázky, audio, video v puzzle popisu + intro
+- [x] **7.4** Markdown rendering v popisech (lightweight parser, např. `marked` nebo `mdx`)
+- [x] **7.5** Countdown timer pro `timeLimitSec` > 0
 - [ ] **7.6** Anti-cheat — kontrola rychlosti pohybu (GPS spoofing detection)
 
 ### Fáze 8: Obsah & Design
@@ -133,11 +133,11 @@ Cíl: **Bohatší herní zážitek.**
 Cíl: **Více her, lepší vizuál.**
 
 - [ ] **8.1** Vytvořit druhou hru — ověřit flexibilitu data modelu
-- [ ] **8.2** Vlastní Header — logo Prahra, navigace, dark/light mode
+- [x] **8.2** Vlastní Header — logo Prahra, navigace, dark/light mode
 - [ ] **8.3** Cover obrázky pro hry (fotky míst)
 - [ ] **8.4** PWA ikony — vlastní logo místo výchozích
-- [ ] **8.5** 404 stránka
-- [ ] **8.6** Odstranit nepoužité shadcn komponenty + web-vitals
+- [x] **8.5** 404 stránka
+- [x] **8.6** Odstranit nepoužité shadcn komponenty + web-vitals
 
 ### Fáze 9: Backend & Multiplayer (budoucnost)
 

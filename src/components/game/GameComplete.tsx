@@ -1,3 +1,4 @@
+import { MediaRenderer } from "@/components/game/MediaRenderer"
 import type { Game, GameState } from "@/types/game"
 
 interface GameCompleteProps {
@@ -80,24 +81,17 @@ export function GameComplete({ game, state, getElapsedTimeSec, getTotalTimeSec, 
         </div>
 
         {/* Bonus media */}
-        <div className="rounded-lg border border-border bg-card overflow-hidden text-left">
-          <img
-            src="/never-gonna-give-you-up.jpg"
-            alt="Never Gonna Give You Up - thumbnail"
-            className="w-full h-auto"
-            loading="lazy"
+        <div className="rounded-lg border border-border bg-card overflow-hidden p-4 space-y-2">
+          <p className="text-sm text-muted-foreground">Bonus video</p>
+          <MediaRenderer
+            media={[
+              {
+                type: "youtube",
+                url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                caption: "Never Gonna Give You Up",
+              },
+            ]}
           />
-          <div className="p-4">
-            <p className="text-sm text-muted-foreground mb-2">Bonus video</p>
-            <a
-              href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-              target="_blank"
-              rel="noreferrer"
-              className="text-sm font-medium text-primary hover:text-primary/80"
-            >
-              Never Gonna Give You Up
-            </a>
-          </div>
         </div>
 
         {/* Actions */}

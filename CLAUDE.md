@@ -45,10 +45,12 @@ Prahra is a GPS-based city puzzle game (outdoor scavenger hunt) — a PWA deploy
 ### Two separate Cloudflare Workers
 
 **Web app** (`wrangler.jsonc`) — TanStack Start SSR app serving `prahra.cz/*`
+
 - Entry: `@tanstack/react-start/server-entry`
 - Uses Cloudflare D1 database binding `prahra_db`
 
 **API worker** (`api/wrangler.api.jsonc`) — Hono REST API serving `prahra.cz/api/*`
+
 - Entry: `api/src/index.ts`
 - All `/api/*` routes require a Clerk JWT Bearer token
 - D1 tables: `users`, `game_progress`, `level_progress`
@@ -56,6 +58,7 @@ Prahra is a GPS-based city puzzle game (outdoor scavenger hunt) — a PWA deploy
 ### Frontend routing
 
 TanStack Router with file-based routes under `src/routes/`:
+
 - `/` — home, list of published games
 - `/game/$gameSlug/intro` — pre-game intro screen
 - `/game/$gameSlug/` — the active game engine (requires Clerk sign-in)
@@ -73,6 +76,7 @@ To add a new game: create a file in `src/data/games/` and register it in `src/da
 `useGameState` (`src/hooks/useGameState.ts`) manages all in-game state with localStorage persistence (key: `prahra_<slug>_state`).
 
 Progress is synced to the API (when signed in) via:
+
 - `useProgressLoad` — loads remote progress on mount and merges with local state
 - `useProgressSync` — pushes state changes to API reactively
 
@@ -99,3 +103,8 @@ Clerk handles auth. `VITE_CLERK_PUBLISHABLE_KEY` env var enables it in the front
 Radix UI primitives + Tailwind CSS v4 + `class-variance-authority`. Component library lives in `src/components/ui/`. Game-specific components are in `src/components/game/`.
 
 Leaflet/react-leaflet is used for the map and is lazy-loaded (it's heavy).
+
+## Code style preferences
+
+- Prefer `type` over `interface` for type definitions
+- Prefer arrow functions over function declarations

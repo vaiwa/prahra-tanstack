@@ -1,10 +1,12 @@
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react"
 import { Link } from "@tanstack/react-router"
+import { GolemIcon } from "./GolemIcon"
 
 export default function Header() {
   return (
     <header className="p-4 flex items-center justify-between bg-background border-b border-border">
       <Link to="/" className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors">
+        <GolemIcon className="h-8 w-8 rounded-md text-primary" variant="simple" />
         <span className="text-lg font-bold">Prahra</span>
       </Link>
       <div className="flex items-center gap-2">

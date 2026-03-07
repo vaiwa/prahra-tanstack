@@ -1,7 +1,9 @@
 import { SignedIn, SignedOut, SignInButton } from "@clerk/clerk-react"
 import { createFileRoute, Link } from "@tanstack/react-router"
 import { ArrowLeft, Clock, MapPin, Star, Users } from "lucide-react"
+import { MediaRenderer } from "@/components/game/MediaRenderer"
 import { getGameBySlug } from "@/data/games"
+import { renderMarkdown } from "@/lib/renderMarkdown"
 import type { Game } from "@/types/game"
 
 export const Route = createFileRoute("/game/$gameSlug/intro")({
@@ -57,6 +59,9 @@ function GameIntroContent({ game }: { game: Game }) {
       </div>
 
       <div className="max-w-md mx-auto px-4 pb-8 space-y-6">
+        {/* Cover media */}
+        {game.media.length > 0 && <MediaRenderer media={game.media} />}
+
         {/* Title */}
         <div>
           <h1 className="text-2xl font-bold text-foreground">{game.name}</h1>
@@ -98,7 +103,11 @@ function GameIntroContent({ game }: { game: Game }) {
 
         {/* Description */}
         <div className="rounded-lg border border-border bg-card p-4">
-          <p className="text-sm text-foreground leading-relaxed">{game.description}</p>
+          <div
+            className="text-sm text-foreground leading-relaxed space-y-2 [&_strong]:font-bold [&_em]:italic"
+            // biome-ignore lint/security/noDangerouslySetInnerHtml: developer-authored game data, not user input
+            dangerouslySetInnerHTML={{ __html: renderMarkdown(game.description) }}
+          />
         </div>
 
         {/* Required items */}

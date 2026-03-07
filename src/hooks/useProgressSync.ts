@@ -1,5 +1,6 @@
 import { useAuth } from "@clerk/clerk-react"
 import { useCallback, useEffect, useMemo, useRef } from "react"
+import { addToSyncQueue, clearSyncQueue, getSyncQueue } from "@/lib/syncQueue"
 import type { GameState, Level } from "@/types/game"
 
 type ProgressSyncParams = {
@@ -23,17 +24,64 @@ export function useProgressSync({ gameSlug, state, currentLevel }: ProgressSyncP
       const token = await getToken()
       if (!token) return
 
-      await fetch(path, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(body),
-      })
+      try {
+        const res = await fetch(path, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(body),
+        })
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      } catch {
+        addToSyncQueue(path, body)
+      }
     },
     [getToken],
   )
+
+  // Flush queued items when coming back online
+  useEffect(() => {
+    if (!isSignedIn) return
+
+    const flushQueue = async () => {
+      const queue = getSyncQueue()
+      if (queue.length === 0) return
+
+      const token = await getToken()
+      if (!token) return
+
+      clearSyncQueue()
+
+      for (let i = 0; i < queue.length; i++) {
+        try {
+          await fetch(queue[i].path, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(queue[i].body),
+          })
+        } catch {
+          // Re-queue this and all remaining items
+          for (let j = i; j < queue.length; j++) {
+            addToSyncQueue(queue[j].path, queue[j].body)
+          }
+          break
+        }
+      }
+    }
+
+    window.addEventListener("online", flushQueue)
+    // Also try to flush on mount (in case we came back online while app was closed)
+    void flushQueue()
+
+    return () => {
+      window.removeEventListener("online", flushQueue)
+    }
+  }, [isSignedIn, getToken])
 
   useEffect(() => {
     if (!isSignedIn) return
@@ -51,7 +99,7 @@ export function useProgressSync({ gameSlug, state, currentLevel }: ProgressSyncP
     if (payloadKey === lastGamePayload.current) return
     lastGamePayload.current = payloadKey
 
-    void postWithAuth(`/api/progress/${gameSlug}`, payload).catch(() => {})
+    void postWithAuth(`/api/progress/${gameSlug}`, payload)
   }, [gameSlug, isSignedIn, postWithAuth, state, totalHintsUsed])
 
   useEffect(() => {
@@ -67,7 +115,7 @@ export function useProgressSync({ gameSlug, state, currentLevel }: ProgressSyncP
       penaltySec: 0,
     }
 
-    void postWithAuth(`/api/level/${gameSlug}/${currentLevel.id}`, payload).catch(() => {})
+    void postWithAuth(`/api/level/${gameSlug}/${currentLevel.id}`, payload)
   }, [currentLevel, gameSlug, isSignedIn, postWithAuth, state.revealedHints])
 
   useEffect(() => {
@@ -76,8 +124,8 @@ export function useProgressSync({ gameSlug, state, currentLevel }: ProgressSyncP
     const completed = state.completedLevels
     const previous = lastCompleted.current
 
-    Object.keys(completed).forEach((levelId) => {
-      if (previous[levelId]) return
+    for (const levelId of Object.keys(completed)) {
+      if (previous[levelId]) continue
 
       const payload = {
         startedAt: null,
@@ -86,8 +134,8 @@ export function useProgressSync({ gameSlug, state, currentLevel }: ProgressSyncP
         penaltySec: 0,
       }
 
-      void postWithAuth(`/api/level/${gameSlug}/${levelId}`, payload).catch(() => {})
-    })
+      void postWithAuth(`/api/level/${gameSlug}/${levelId}`, payload)
+    }
 
     lastCompleted.current = completed
   }, [gameSlug, isSignedIn, postWithAuth, state.completedLevels, state.revealedHints])

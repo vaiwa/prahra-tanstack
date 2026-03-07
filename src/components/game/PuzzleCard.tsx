@@ -1,8 +1,10 @@
 import { useState } from "react"
+import { MediaRenderer } from "@/components/game/MediaRenderer"
+import { renderMarkdown } from "@/lib/renderMarkdown"
 import { validateAnswer } from "@/lib/validate-answer"
 import type { Level } from "@/types/game"
 
-interface PuzzleCardProps {
+type PuzzleCardProps = {
   level: Level
   revealedHintIndices: number[]
   onRevealHint: (hintIndex: number) => void
@@ -11,13 +13,13 @@ interface PuzzleCardProps {
   onManualUnlock?: () => void
 }
 
-export function PuzzleCard({
+export const PuzzleCard = ({
   level,
   revealedHintIndices,
   onRevealHint,
   onCorrectAnswer,
   onManualUnlock,
-}: PuzzleCardProps) {
+}: PuzzleCardProps) => {
   const [answer, setAnswer] = useState("")
   const [feedback, setFeedback] = useState<"correct" | "wrong" | null>(null)
   const [showHintConfirm, setShowHintConfirm] = useState<number | null>(null)
@@ -51,8 +53,15 @@ export function PuzzleCard({
       {/* Level title */}
       <div>
         <h2 className="text-lg font-bold text-foreground">{level.name}</h2>
-        <p className="text-sm text-muted-foreground whitespace-pre-line mt-2">{level.description}</p>
+        <div
+          className="text-sm text-muted-foreground mt-2 space-y-2 [&_strong]:font-bold [&_em]:italic"
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: developer-authored game data, not user input
+          dangerouslySetInnerHTML={{ __html: renderMarkdown(level.description) }}
+        />
       </div>
+
+      {/* Level media */}
+      {level.media.length > 0 && <MediaRenderer media={level.media} />}
 
       {/* Revealed hints */}
       {revealedHintIndices.length > 0 && (

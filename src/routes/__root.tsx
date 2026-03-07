@@ -6,6 +6,7 @@ import { createRootRouteWithContext, HeadContent, Scripts, useRouterState } from
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools"
 import Footer from "../components/Footer"
 import Header from "../components/Header"
+import { NotFound } from "../components/NotFound"
 import { useOnlineStatus } from "../hooks/useOnlineStatus"
 import { useServiceWorkerUpdate } from "../hooks/useServiceWorkerUpdate"
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools"
@@ -18,6 +19,7 @@ interface MyRouterContext {
 const clerkPublishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
+  notFoundComponent: NotFound,
   head: () => ({
     meta: [
       {

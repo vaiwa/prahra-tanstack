@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router"
 import { Clock, MapPin, Star, Users } from "lucide-react"
+import { GolemIcon } from "@/components/GolemIcon"
 import { getPublishedGames } from "@/data/games"
 import { usePWAInstallPrompt } from "@/hooks/usePWAInstallPrompt"
 
@@ -15,10 +16,11 @@ function HomePage() {
       <section className="relative py-16 px-6 text-center overflow-hidden">
         <div className="absolute inset-0 bg-linear-to-r from-primary/5 via-primary/10 to-primary/5" />
         <div className="relative max-w-md mx-auto">
-          <h1 className="text-4xl font-black text-primary mb-2">Prahra</h1>
-          <p className="text-lg text-muted-foreground">
-            Venkovní puzzle hry v Praze. Žádná instalace — stačí mobil a chuť objevovat.
-          </p>
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <h1 className="text-4xl font-black text-primary">Prahra</h1>
+            <GolemIcon className="h-60 w-60 text-primary" />
+          </div>
+          <p className="text-lg text-muted-foreground">Venkovní puzzle hry v Praze</p>
           {canInstall && (
             <button
               type="button"
