@@ -9,11 +9,11 @@ export const games: Record<string, Game> = {
 }
 
 /** Get all published games */
-export function getPublishedGames(): Game[] {
+export const getPublishedGames = (): Game[] => {
   return Object.values(games).filter((g) => g.isPublished)
 }
 
 /** Get a game by slug */
-export function getGameBySlug(slug: string): Game | undefined {
+export const getGameBySlug = (slug: string): Game | undefined => {
   return games[slug]
 }

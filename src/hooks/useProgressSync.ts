@@ -9,7 +9,7 @@ type ProgressSyncParams = {
   currentLevel: Level | null
 }
 
-export function useProgressSync({ gameSlug, state, currentLevel }: ProgressSyncParams) {
+export const useProgressSync = ({ gameSlug, state, currentLevel }: ProgressSyncParams) => {
   const { isSignedIn, getToken } = useAuth()
   const lastGamePayload = useRef<string | null>(null)
   const lastLevelStarted = useRef<string | null>(null)

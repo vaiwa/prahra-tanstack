@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router"
 
-export function NotFound() {
+export const NotFound = () => {
   return (
     <div className="min-h-80 bg-background flex items-center justify-center p-4">
       <div className="text-center space-y-4 max-w-md">

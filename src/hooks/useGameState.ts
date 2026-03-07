@@ -20,11 +20,11 @@ type RemoteProgress = {
 
 const STORAGE_PREFIX = "prahra_"
 
-function getStorageKey(gameSlug: string): string {
+const getStorageKey = (gameSlug: string): string => {
   return `${STORAGE_PREFIX}${gameSlug}_state`
 }
 
-function loadState(gameSlug: string): GameState | null {
+const loadState = (gameSlug: string): GameState | null => {
   if (typeof window === "undefined") return null
   try {
     const raw = localStorage.getItem(getStorageKey(gameSlug))
@@ -35,7 +35,7 @@ function loadState(gameSlug: string): GameState | null {
   }
 }
 
-function saveState(state: GameState): void {
+const saveState = (state: GameState): void => {
   if (typeof window === "undefined") return
   try {
     localStorage.setItem(getStorageKey(state.gameSlug), JSON.stringify(state))
@@ -44,7 +44,7 @@ function saveState(state: GameState): void {
   }
 }
 
-function createInitialState(gameSlug: string): GameState {
+const createInitialState = (gameSlug: string): GameState => {
   return {
     gameSlug,
     currentLevelIndex: 0,
@@ -58,7 +58,7 @@ function createInitialState(gameSlug: string): GameState {
   }
 }
 
-function normalizeState(saved: GameState): GameState {
+const normalizeState = (saved: GameState): GameState => {
   return {
     ...createInitialState(saved.gameSlug),
     ...saved,
@@ -66,12 +66,12 @@ function normalizeState(saved: GameState): GameState {
   }
 }
 
-function progressScore(state: GameState): number {
+const progressScore = (state: GameState): number => {
   const completed = Object.keys(state.completedLevels).length
   return (state.isComplete ? 10000 : 0) + state.currentLevelIndex * 100 + completed
 }
 
-function mergeHintIndices(existing: number[], incoming: number[]): number[] {
+const mergeHintIndices = (existing: number[], incoming: number[]): number[] => {
   const merged = new Set<number>()
   existing.forEach((idx) => {
     merged.add(idx)
@@ -85,7 +85,7 @@ function mergeHintIndices(existing: number[], incoming: number[]): number[] {
 /**
  * Hook to manage the game state with localStorage persistence.
  */
-export function useGameState(game: Game) {
+export const useGameState = (game: Game) => {
   const [state, setState] = useState<GameState>(() => {
     const saved = loadState(game.slug)
     if (saved && !saved.isComplete) return normalizeState(saved)

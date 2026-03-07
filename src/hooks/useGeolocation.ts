@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import type { GpsLocation } from "@/types/game"
 
-export interface GeolocationState {
+export type GeolocationState = {
   /** Current position or null if not yet acquired */
   position: GpsLocation | null
   /** Accuracy in meters */
@@ -14,7 +14,7 @@ export interface GeolocationState {
   lastUpdate: number | null
 }
 
-interface UseGeolocationOptions {
+type UseGeolocationOptions = {
   /** Enable high accuracy (GPS vs cell tower) */
   enableHighAccuracy?: boolean
   /** Maximum age of cached position in ms */
@@ -27,7 +27,7 @@ interface UseGeolocationOptions {
  * Hook to track the user's GPS position using the Geolocation API.
  * Supports a "fake position" override for debug/testing.
  */
-export function useGeolocation(options: UseGeolocationOptions = {}) {
+export const useGeolocation = (options: UseGeolocationOptions = {}) => {
   const { enableHighAccuracy = true, maximumAge = 5000, timeout = 15000 } = options
 
   const [state, setState] = useState<GeolocationState>({

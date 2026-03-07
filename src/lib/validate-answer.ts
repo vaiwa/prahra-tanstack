@@ -4,7 +4,7 @@ import type { AnswerType } from "@/types/game"
  * Validate a player's answer against the correct answer.
  * Returns true if the answer is correct.
  */
-export function validateAnswer(input: string, correctAnswer: string | string[], answerType: AnswerType): boolean {
+export const validateAnswer = (input: string, correctAnswer: string | string[], answerType: AnswerType): boolean => {
   const trimmed = input.trim()
 
   switch (answerType) {

@@ -1,6 +1,6 @@
 import { formatDistance } from "@/lib/geo"
 
-interface DistanceIndicatorProps {
+type DistanceIndicatorProps = {
   distanceMeters: number
   unlockRadius: number
 }
@@ -12,7 +12,7 @@ interface DistanceIndicatorProps {
  * - Yellow: 50-100m
  * - Green: < 50m (close to unlock)
  */
-export function DistanceIndicator({ distanceMeters, unlockRadius }: DistanceIndicatorProps) {
+export const DistanceIndicator = ({ distanceMeters, unlockRadius }: DistanceIndicatorProps) => {
   const isInRange = distanceMeters <= unlockRadius
   const formatted = formatDistance(distanceMeters)
 

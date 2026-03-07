@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
  * Hook to keep the screen awake using the Screen Wake Lock API.
  * Prevents the phone from sleeping while the game is active.
  */
-export function useWakeLock() {
+export const useWakeLock = () => {
   const [isActive, setIsActive] = useState(false)
   const [isSupported] = useState(() => typeof navigator !== "undefined" && "wakeLock" in navigator)
   const wakeLockRef = useRef<WakeLockSentinel | null>(null)

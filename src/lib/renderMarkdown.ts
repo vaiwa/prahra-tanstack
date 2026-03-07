@@ -3,7 +3,7 @@
  * Data is authored by developers (not user input), so dangerouslySetInnerHTML is safe.
  * Supports: **bold**, *italic*, [link](url), \n\n paragraphs, \n line breaks.
  */
-export function renderMarkdown(text: string): string {
+export const renderMarkdown = (text: string): string => {
   return text
     .split("\n\n")
     .map((paragraph) => {

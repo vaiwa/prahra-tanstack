@@ -1,7 +1,7 @@
 import { MediaRenderer } from "@/components/game/MediaRenderer"
 import type { Game, GameState } from "@/types/game"
 
-interface GameCompleteProps {
+type GameCompleteProps = {
   game: Game
   state: GameState
   getElapsedTimeSec: () => number
@@ -9,7 +9,7 @@ interface GameCompleteProps {
   onRestart: () => void
 }
 
-function formatTime(seconds: number): string {
+const formatTime = (seconds: number): string => {
   const h = Math.floor(seconds / 3600)
   const m = Math.floor((seconds % 3600) / 60)
   const s = seconds % 60
@@ -19,7 +19,7 @@ function formatTime(seconds: number): string {
   return `${m}min ${s}s`
 }
 
-export function GameComplete({ game, state, getElapsedTimeSec, getTotalTimeSec, onRestart }: GameCompleteProps) {
+export const GameComplete = ({ game, state, getElapsedTimeSec, getTotalTimeSec, onRestart }: GameCompleteProps) => {
   const elapsed = getElapsedTimeSec()
   const total = getTotalTimeSec()
   const totalHintsUsed = Object.values(state.revealedHints).reduce((sum, hints) => sum + hints.length, 0)

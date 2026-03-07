@@ -23,7 +23,7 @@ type ProgressLoadParams = {
   onRemoteProgress: (data: RemoteProgress) => void
 }
 
-export function useProgressLoad({ gameSlug, onRemoteProgress }: ProgressLoadParams) {
+export const useProgressLoad = ({ gameSlug, onRemoteProgress }: ProgressLoadParams) => {
   const { isSignedIn, getToken } = useAuth()
   const loadedForGame = useRef<string | null>(null)
 

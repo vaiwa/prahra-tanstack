@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 
-export function useOnlineStatus() {
+export const useOnlineStatus = () => {
   const [isOnline, setIsOnline] = useState(() => {
     if (typeof window === "undefined") {
       return true

@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react"
 import type { GameState } from "@/types/game"
 
-interface GameProgressProps {
+type GameProgressProps = {
   state: GameState
   totalLevels: number
   getElapsedTimeSec: () => number
 }
 
-function formatTime(seconds: number): string {
+const formatTime = (seconds: number): string => {
   const h = Math.floor(seconds / 3600)
   const m = Math.floor((seconds % 3600) / 60)
   const s = seconds % 60
@@ -17,7 +17,7 @@ function formatTime(seconds: number): string {
   return `${m}:${String(s).padStart(2, "0")}`
 }
 
-export function GameProgress({ state, totalLevels, getElapsedTimeSec }: GameProgressProps) {
+export const GameProgress = ({ state, totalLevels, getElapsedTimeSec }: GameProgressProps) => {
   const [elapsed, setElapsed] = useState(getElapsedTimeSec())
 
   // Update timer every second

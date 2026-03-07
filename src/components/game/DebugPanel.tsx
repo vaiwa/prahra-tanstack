@@ -1,6 +1,6 @@
 import type { GpsLocation, Level } from "@/types/game"
 
-interface DebugPanelProps {
+type DebugPanelProps = {
   position: GpsLocation | null
   accuracy: number | null
   isFakePosition: boolean
@@ -12,7 +12,7 @@ interface DebugPanelProps {
   onClearFake: () => void
 }
 
-export function DebugPanel({
+export const DebugPanel = ({
   position,
   accuracy,
   isFakePosition,
@@ -22,7 +22,7 @@ export function DebugPanel({
   levels,
   onTeleport,
   onClearFake,
-}: DebugPanelProps) {
+}: DebugPanelProps) => {
   return (
     <div className="rounded-lg border border-orange-500/30 bg-orange-500/5 p-3 space-y-3">
       <div className="flex items-center justify-between">

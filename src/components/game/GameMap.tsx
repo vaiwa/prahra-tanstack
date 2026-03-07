@@ -33,7 +33,7 @@ const playerIcon = L.divIcon({
 })
 
 /** Auto-pan map to follow player position */
-function MapFollower({ position }: { position: GpsLocation }) {
+const MapFollower = ({ position }: { position: GpsLocation }) => {
   const map = useMap()
   const isFirstRef = useRef(true)
 
@@ -49,7 +49,7 @@ function MapFollower({ position }: { position: GpsLocation }) {
   return null
 }
 
-interface GameMapProps {
+type GameMapProps = {
   playerPosition: GpsLocation | null
   targetPosition: GpsLocation
   unlockRadius: number
@@ -58,7 +58,13 @@ interface GameMapProps {
   showTarget?: boolean
 }
 
-export function GameMap({ playerPosition, targetPosition, unlockRadius, accuracy, showTarget = true }: GameMapProps) {
+export const GameMap = ({
+  playerPosition,
+  targetPosition,
+  unlockRadius,
+  accuracy,
+  showTarget = true,
+}: GameMapProps) => {
   const center = playerPosition ?? targetPosition
 
   return (

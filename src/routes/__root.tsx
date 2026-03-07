@@ -4,15 +4,15 @@ import { TanStackDevtools } from "@tanstack/react-devtools"
 import type { QueryClient } from "@tanstack/react-query"
 import { createRootRouteWithContext, HeadContent, Scripts, useRouterState } from "@tanstack/react-router"
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools"
-import Footer from "../components/Footer"
-import Header from "../components/Header"
+import { Footer } from "../components/Footer"
+import { Header } from "../components/Header"
 import { NotFound } from "../components/NotFound"
 import { useOnlineStatus } from "../hooks/useOnlineStatus"
 import { useServiceWorkerUpdate } from "../hooks/useServiceWorkerUpdate"
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools"
 import appCss from "../styles.css?url"
 
-interface MyRouterContext {
+type MyRouterContext = {
   queryClient: QueryClient
 }
 

@@ -6,7 +6,7 @@ type SyncQueueItem = {
   timestamp: string
 }
 
-export function getSyncQueue(): SyncQueueItem[] {
+export const getSyncQueue = (): SyncQueueItem[] => {
   try {
     const raw = localStorage.getItem(SYNC_QUEUE_KEY)
     return raw ? (JSON.parse(raw) as SyncQueueItem[]) : []
@@ -15,7 +15,7 @@ export function getSyncQueue(): SyncQueueItem[] {
   }
 }
 
-export function addToSyncQueue(path: string, body: unknown): void {
+export const addToSyncQueue = (path: string, body: unknown): void => {
   try {
     const queue = getSyncQueue()
     queue.push({ path, body, timestamp: new Date().toISOString() })
@@ -25,7 +25,7 @@ export function addToSyncQueue(path: string, body: unknown): void {
   }
 }
 
-export function clearSyncQueue(): void {
+export const clearSyncQueue = (): void => {
   try {
     localStorage.removeItem(SYNC_QUEUE_KEY)
   } catch {

@@ -2,7 +2,7 @@ import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-reac
 import { Link } from "@tanstack/react-router"
 import { GolemIcon } from "./GolemIcon"
 
-export default function Header() {
+export const Header = () => {
   return (
     <header className="p-4 flex items-center justify-between bg-background border-b border-border">
       <Link to="/" className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors">

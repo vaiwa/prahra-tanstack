@@ -4,7 +4,7 @@ import type { GpsLocation } from "@/types/game"
  * Calculate the distance between two GPS coordinates using the Haversine formula.
  * @returns Distance in meters
  */
-export function haversineDistance(a: GpsLocation, b: GpsLocation): number {
+export const haversineDistance = (a: GpsLocation, b: GpsLocation): number => {
   const R = 6_371_000 // Earth's radius in meters
   const toRad = (deg: number) => (deg * Math.PI) / 180
 
@@ -23,7 +23,7 @@ export function haversineDistance(a: GpsLocation, b: GpsLocation): number {
  * Format distance for display.
  * Under 1000m → "340 m", above → "1.2 km"
  */
-export function formatDistance(meters: number): string {
+export const formatDistance = (meters: number): string => {
   if (meters < 1000) {
     return `${Math.round(meters)} m`
   }
@@ -34,7 +34,7 @@ export function formatDistance(meters: number): string {
  * Calculate bearing from point A to point B in degrees (0-360).
  * 0 = North, 90 = East, 180 = South, 270 = West.
  */
-export function calculateBearing(from: GpsLocation, to: GpsLocation): number {
+export const calculateBearing = (from: GpsLocation, to: GpsLocation): number => {
   const toRad = (deg: number) => (deg * Math.PI) / 180
   const toDeg = (rad: number) => (rad * 180) / Math.PI
 

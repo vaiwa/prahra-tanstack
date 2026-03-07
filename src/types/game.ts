@@ -1,6 +1,6 @@
 // src/types/game.ts — Prahra data model
 
-export interface Game {
+export type Game = {
   /** Unique identifier (UUID or slug) */
   id: string
   /** Human-readable URL slug */
@@ -35,7 +35,7 @@ export interface Game {
   levels: Level[]
 }
 
-export interface Level {
+export type Level = {
   /** Unique identifier within the game */
   id: string
   /** Order in sequence (1-based) */
@@ -64,21 +64,21 @@ export interface Level {
   solvedMessage?: string
 }
 
-export interface Hint {
+export type Hint = {
   /** Hint text (Markdown) */
   text: string
   /** Time penalty in seconds added when hint is revealed */
   penaltySec: number
 }
 
-export interface GpsLocation {
+export type GpsLocation = {
   lat: number
   lng: number
   /** Optional human-readable name ("U Orloje", "Park Lužánky") */
   label?: string
 }
 
-export interface Media {
+export type Media = {
   /** Type of media */
   type: "image" | "audio" | "video" | "attachment" | "youtube"
   /** URL or relative path to the file */
@@ -95,7 +95,7 @@ export type AnswerType =
   | "none" // No answer needed, just reach the location
 
 /** Persisted game state (localStorage) */
-export interface GameState {
+export type GameState = {
   gameSlug: string
   currentLevelIndex: number
   startedAt: string

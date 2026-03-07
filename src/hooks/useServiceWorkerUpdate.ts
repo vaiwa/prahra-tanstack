@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { registerServiceWorker } from "../lib/registerServiceWorker"
 
-export function useServiceWorkerUpdate() {
+export const useServiceWorkerUpdate = () => {
   const [updateAvailable, setUpdateAvailable] = useState(false)
   const [waitingWorker, setWaitingWorker] = useState<ServiceWorker | null>(null)
 

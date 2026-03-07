@@ -6,7 +6,8 @@
       "Bash(npm run:*)",
       "Bash(npx biome:*)",
       "Bash(npx tsc:*)",
-      "Bash(git diff:*)"
+      "Bash(git diff:*)",
+      "Bash(npm test:*)"
     ]
   }
 }

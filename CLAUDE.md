@@ -108,3 +108,4 @@ Leaflet/react-leaflet is used for the map and is lazy-loaded (it's heavy).
 
 - Prefer `type` over `interface` for type definitions
 - Prefer arrow functions over function declarations
+- Prefer named exports over default exports

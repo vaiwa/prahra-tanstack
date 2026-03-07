@@ -2,7 +2,7 @@ type RegisterCallbacks = {
   onUpdate?: (registration: ServiceWorkerRegistration) => void
 }
 
-export function registerServiceWorker(callbacks: RegisterCallbacks = {}) {
+export const registerServiceWorker = (callbacks: RegisterCallbacks = {}) => {
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
       navigator.serviceWorker
