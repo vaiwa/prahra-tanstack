@@ -104,6 +104,14 @@ Radix UI primitives + Tailwind CSS v4 + `class-variance-authority`. Component li
 
 Leaflet/react-leaflet is used for the map and is lazy-loaded (it's heavy).
 
+### Service worker & offline
+
+Custom service worker (`public/service-worker.js`) with:
+- App shell caching (stale-while-revalidate for scripts/styles/images/fonts)
+- Navigation fallback to `/offline.html`
+- OSM map tile caching (cache-on-first-play, separate `prahra-tiles-v1` cache, max 2000 entries)
+
+
 ## Code style preferences
 
 - Prefer `type` over `interface` for type definitions

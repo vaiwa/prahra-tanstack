@@ -18,7 +18,7 @@ export const demoPragueOldtown: Game = {
   media: [
     {
       type: "image",
-      url: "/games/prague-oldtown/cover.jpg",
+      url: "/games/prague-oldtown/cover.svg",
       caption: "Staroměstské náměstí",
     },
   ],

@@ -104,7 +104,7 @@ Cíl: **Aplikace běží na prahra.cz, funguje jako PWA, testovatelná na mobilu
 Cíl: **Hra funguje i bez signálu (les, metro, tunel).**
 
 - [x] **6.1** Přidat `vite-plugin-pwa` nebo vlastní SW s Workbox (vlastní SW)
-- [ ] **6.2** Precache: herní assets, map tiles pro oblast hry, game data
+- [x] **6.2** Precache: map tiles cache-on-first-play v service workeru (OSM tile URL, max 2000 entries)
 - [x] **6.3** Offline detection banner — "Jsi offline, hra běží v offline režimu"
 - [x] **6.4** Sync výsledků po obnovení spojení
 
@@ -115,7 +115,7 @@ Cíl: **Uživatel ma ucet a prubezny progres se uklada do D1.**
 - [x] **6.5.1** Samostatny API worker na `/api/*`
 - [x] **6.5.2** Clerk auth (Bearer token verify)
 - [x] **6.5.3** Klientsky sync prubezneho progresu
-- [ ] **6.5.4** Migrace D1 aplikovane na produkci
+- [x] **6.5.4** Migrace D1 aplikovane na produkci
 
 ### Fáze 7: Herní vylepšení
 
@@ -125,7 +125,7 @@ Cíl: **Bohatší herní zážitek.**
 - [ ] **7.2** QR code scanner — kamera pro `answerType: 'qr-code'` levely
 - [x] **7.3** Media rendering — obrázky, audio, video v puzzle popisu + intro
 - [x] **7.4** Markdown rendering v popisech (lightweight parser, např. `marked` nebo `mdx`)
-- [x] **7.5** Countdown timer pro `timeLimitSec` > 0
+- [ ] **7.5** ~~Countdown timer pro `timeLimitSec` > 0~~ — **ZRUSENO** (uzivatel rozhodl odstranit timer z UI)
 - [ ] **7.6** Anti-cheat — kontrola rychlosti pohybu (GPS spoofing detection)
 
 ### Fáze 8: Obsah & Design
@@ -134,10 +134,11 @@ Cíl: **Více her, lepší vizuál.**
 
 - [ ] **8.1** Vytvořit druhou hru — ověřit flexibilitu data modelu
 - [x] **8.2** Vlastní Header — logo Prahra, navigace, dark/light mode
-- [ ] **8.3** Cover obrázky pro hry (fotky míst)
-- [ ] **8.4** PWA ikony — vlastní logo místo výchozích
+- [x] **8.3** Cover obrázky pro hry (fotky míst)
+- [x] **8.4** PWA ikony — vlastní golem logo (logo192.png, logo512.png)
 - [x] **8.5** 404 stránka
 - [x] **8.6** Odstranit nepoužité shadcn komponenty + web-vitals
+- [x] **8.7** iOS PWA install instrukce (`usePWAInstallPrompt` — detekce iOS Safari, instrukce pro "Pridat na plochu")
 
 ### Fáze 9: Backend & Multiplayer (budoucnost)
 
@@ -187,5 +188,6 @@ Klíč: `prahra_${gameSlug}_state` → JSON s aktuálním levelem, časem, skór
 
 - `public/manifest.json` — branded "Prahra", standalone, portrait, theme/background #2b1d0e
 - Install prompt tlačítko na homepage + update toast při nové SW verzi
-- Vlastní service worker + offline fallback
-- Ikony: `favicon.ico`, `logo192.png`, `logo512.png` (zatím výchozí, potřeba vlastní)
+- Vlastní service worker + offline fallback + OSM tile caching (cache-on-first-play, max 2000 tiles)
+- Ikony: `favicon.ico`, `logo192.png`, `logo512.png` (golem logo)
+- iOS install instrukce: `usePWAInstallPrompt` detekuje iOS Safari a zobrazuje instrukce pro "Pridat na plochu"

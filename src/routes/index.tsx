@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router"
 import { Clock, MapPin, Star, Users } from "lucide-react"
 import { GolemIcon } from "@/components/GolemIcon"
+import { MediaRenderer } from "@/components/game/MediaRenderer"
 import { getPublishedGames } from "@/data/games"
 import { usePWAInstallPrompt } from "@/hooks/usePWAInstallPrompt"
 
@@ -8,7 +9,7 @@ export const Route = createFileRoute("/")({ component: HomePage })
 
 function HomePage() {
   const games = getPublishedGames()
-  const { canInstall, install } = usePWAInstallPrompt()
+  const { canInstall, install, showIOSInstructions, dismissIOSInstructions } = usePWAInstallPrompt()
 
   return (
     <div className="bg-linear-to-b from-background via-card to-background">
@@ -30,6 +31,27 @@ function HomePage() {
               Instalovat aplikaci
             </button>
           )}
+          {showIOSInstructions && (
+            <div className="mt-6 rounded-xl border border-border bg-card p-4 text-left space-y-2">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-semibold text-foreground">Nainstaluj si aplikaci</p>
+                <button
+                  type="button"
+                  onClick={dismissIOSInstructions}
+                  className="text-muted-foreground hover:text-foreground text-lg leading-none"
+                >
+                  &times;
+                </button>
+              </div>
+              <ol className="text-sm text-muted-foreground space-y-1 list-decimal list-inside">
+                <li>
+                  Klepni na <span className="inline-block align-text-bottom text-base">&#xfed8;</span> (Sdileni) dole v
+                  Safari
+                </li>
+                <li>Zvol "Pridat na plochu"</li>
+              </ol>
+            </div>
+          )}
         </div>
       </section>
 
@@ -50,6 +72,9 @@ function HomePage() {
                 params={{ gameSlug: game.slug }}
                 className="block rounded-xl border border-border bg-card hover:border-primary/50 transition-all duration-200 overflow-hidden"
               >
+                {game.media.length > 0 && (
+                  <MediaRenderer media={game.media.slice(0, 1)} className="[&_img]:rounded-none [&_img]:max-h-48" />
+                )}
                 <div className="p-4 space-y-3">
                   <div>
                     <h3 className="text-lg font-bold text-foreground">{game.name}</h3>
