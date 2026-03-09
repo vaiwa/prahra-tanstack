@@ -5,7 +5,19 @@ type MediaRendererProps = {
   className?: string
 }
 
+const isSafeUrl = (url: string): boolean => {
+  if (url.startsWith("/")) return true
+  try {
+    const parsed = new URL(url)
+    return parsed.protocol === "https:" || parsed.protocol === "http:"
+  } catch {
+    return false
+  }
+}
+
 const MediaItem = ({ item }: { item: Media }) => {
+  if (!isSafeUrl(item.url)) return null
+
   switch (item.type) {
     case "image":
       return (
@@ -15,9 +27,9 @@ const MediaItem = ({ item }: { item: Media }) => {
         </figure>
       )
     case "youtube": {
-      // Extract video ID from various YouTube URL formats
-      const videoId =
-        item.url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=))([^&?/]+)/)?.[1] ?? item.url
+      const rawId = item.url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=))([^&?/]+)/)?.[1]
+      if (!rawId || !/^[\w-]{1,20}$/.test(rawId)) return null
+      const videoId = rawId
       return (
         <div className="relative w-full aspect-video rounded-md overflow-hidden">
           <iframe

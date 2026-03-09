@@ -8,7 +8,12 @@
       "Bash(npx tsc:*)",
       "Bash(git diff:*)",
       "Bash(npm test:*)",
-      "Bash(npx wrangler:*)"
+      "Bash(npx wrangler:*)",
+      "Bash(git:*)",
+      "Bash(npm audit:*)",
+      "Bash(grep:*)",
+      "Bash(npx vitest:*)",
+      "WebSearch"
     ]
   }
 }

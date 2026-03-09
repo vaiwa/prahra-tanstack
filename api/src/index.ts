@@ -2,6 +2,7 @@
 import { verifyToken } from "@clerk/backend"
 import { Hono } from "hono"
 import { cors } from "hono/cors"
+import { z } from "zod"
 import { APP_VERSION } from "./version"
 
 type Bindings = {
@@ -15,6 +16,28 @@ type Variables = {
 
 const app = new Hono<{ Bindings: Bindings; Variables: Variables }>()
 
+// --- Validation schemas ---
+
+const slugPattern = /^[a-z0-9_-]{1,100}$/
+
+const gameProgressSchema = z.object({
+  startedAt: z.string().max(50).optional(),
+  currentLevelIndex: z.number().int().min(0).max(100).optional(),
+  totalHintsUsed: z.number().int().min(0).max(1000).optional(),
+  totalPenaltySec: z.number().int().min(0).max(100_000).optional(),
+  isComplete: z.boolean().optional(),
+  completedAt: z.string().max(50).nullable().optional(),
+})
+
+const levelProgressSchema = z.object({
+  startedAt: z.string().max(50).nullable().optional(),
+  completedAt: z.string().max(50).nullable().optional(),
+  hintsUsed: z.number().int().min(0).max(100).optional(),
+  penaltySec: z.number().int().min(0).max(100_000).optional(),
+})
+
+// --- CORS ---
+
 app.use(
   "/api/*",
   cors({
@@ -24,6 +47,8 @@ app.use(
   }),
 )
 
+// --- Public endpoints ---
+
 app.get("/api/health", (c) => {
   return c.json({ ok: true })
 })
@@ -31,6 +56,8 @@ app.get("/api/health", (c) => {
 app.get("/api/version", (c) => {
   return c.json({ version: APP_VERSION })
 })
+
+// --- Auth middleware ---
 
 app.use("/api/*", async (c, next) => {
   const authHeader = c.req.header("Authorization")
@@ -57,6 +84,8 @@ app.use("/api/*", async (c, next) => {
   }
 })
 
+// --- Helpers ---
+
 async function ensureUserId(db: D1Database, clerkUserId: string) {
   const existing = await db
     .prepare("SELECT id FROM users WHERE clerk_user_id = ?")
@@ -76,6 +105,8 @@ async function ensureUserId(db: D1Database, clerkUserId: string) {
   return result.meta.last_row_id as number
 }
 
+// --- Authenticated endpoints ---
+
 app.get("/api/me", async (c) => {
   const clerkUserId = c.get("authUserId")
   const userId = await ensureUserId(c.env.prahra_db, clerkUserId)
@@ -84,8 +115,13 @@ app.get("/api/me", async (c) => {
 
 app.get("/api/progress/:gameSlug", async (c) => {
   const clerkUserId = c.get("authUserId")
-  const userId = await ensureUserId(c.env.prahra_db, clerkUserId)
   const gameSlug = c.req.param("gameSlug")
+
+  if (!slugPattern.test(gameSlug)) {
+    return c.json({ error: "Invalid game slug" }, 400)
+  }
+
+  const userId = await ensureUserId(c.env.prahra_db, clerkUserId)
 
   const progress = await c.env.prahra_db
     .prepare("SELECT * FROM game_progress WHERE user_id = ? AND game_slug = ?")
@@ -102,17 +138,20 @@ app.get("/api/progress/:gameSlug", async (c) => {
 
 app.post("/api/progress/:gameSlug", async (c) => {
   const clerkUserId = c.get("authUserId")
-  const userId = await ensureUserId(c.env.prahra_db, clerkUserId)
   const gameSlug = c.req.param("gameSlug")
-  const body = await c.req.json<{
-    startedAt?: string
-    currentLevelIndex?: number
-    totalHintsUsed?: number
-    totalPenaltySec?: number
-    isComplete?: boolean
-    completedAt?: string | null
-  }>()
 
+  if (!slugPattern.test(gameSlug)) {
+    return c.json({ error: "Invalid game slug" }, 400)
+  }
+
+  const raw = await c.req.json()
+  const parsed = gameProgressSchema.safeParse(raw)
+  if (!parsed.success) {
+    return c.json({ error: "Invalid request body" }, 400)
+  }
+
+  const body = parsed.data
+  const userId = await ensureUserId(c.env.prahra_db, clerkUserId)
   const now = new Date().toISOString()
 
   await c.env.prahra_db
@@ -138,16 +177,21 @@ app.post("/api/progress/:gameSlug", async (c) => {
 
 app.post("/api/level/:gameSlug/:levelId", async (c) => {
   const clerkUserId = c.get("authUserId")
-  const userId = await ensureUserId(c.env.prahra_db, clerkUserId)
   const gameSlug = c.req.param("gameSlug")
   const levelId = c.req.param("levelId")
-  const body = await c.req.json<{
-    startedAt?: string | null
-    completedAt?: string | null
-    hintsUsed?: number
-    penaltySec?: number
-  }>()
 
+  if (!slugPattern.test(gameSlug) || !slugPattern.test(levelId)) {
+    return c.json({ error: "Invalid parameters" }, 400)
+  }
+
+  const raw = await c.req.json()
+  const parsed = levelProgressSchema.safeParse(raw)
+  if (!parsed.success) {
+    return c.json({ error: "Invalid request body" }, 400)
+  }
+
+  const body = parsed.data
+  const userId = await ensureUserId(c.env.prahra_db, clerkUserId)
   const now = new Date().toISOString()
 
   await c.env.prahra_db

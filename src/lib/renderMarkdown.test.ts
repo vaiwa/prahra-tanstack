@@ -38,4 +38,25 @@ describe("renderMarkdown", () => {
   it("handles empty string", () => {
     expect(renderMarkdown("")).toBe("<p></p>")
   })
+
+  it("rejects javascript: protocol in links", () => {
+    const result = renderMarkdown("[xss](javascript:alert(1))")
+    expect(result).not.toContain("href")
+    expect(result).toContain("[xss](javascript:alert(1))")
+  })
+
+  it("rejects data: protocol in links", () => {
+    const result = renderMarkdown("[xss](data:text/html,<script>alert(1)</script>)")
+    expect(result).not.toContain("href")
+  })
+
+  it("allows http:// links", () => {
+    const result = renderMarkdown("[ok](http://example.com)")
+    expect(result).toContain('href="http://example.com"')
+  })
+
+  it("escapes quotes in URLs", () => {
+    const result = renderMarkdown('[link](https://example.com/a"b)')
+    expect(result).toContain('href="https://example.com/a&quot;b"')
+  })
 })

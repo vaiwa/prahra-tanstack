@@ -44,6 +44,14 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         name: "apple-mobile-web-app-status-bar-style",
         content: "black-translucent",
       },
+      {
+        "http-equiv": "X-Content-Type-Options",
+        content: "nosniff",
+      },
+      {
+        name: "referrer",
+        content: "strict-origin-when-cross-origin",
+      },
     ],
     links: [
       {
